@@ -1,0 +1,30 @@
+intents:
+  - greet_greg
+  - goodbye
+  - mood_affirm
+  - mood_deny
+  - mood_great
+
+actions:
+- utter_greet_greg
+- utter_did_that_help
+- utter_happy
+- utter_goodbye
+
+templates:
+  utter_greet_greg:
+  - text: "Hey! How are you?"
+    buttons:
+    - title: "great"
+      payload: "great"
+    - title: "super sad"
+      payload: "super sad"
+
+  utter_did_that_help:
+  - text: "Did that help you?"
+
+  utter_happy:
+  - text: "Great carry on!"
+
+  utter_goodbye:
+  - text: "Bye"
