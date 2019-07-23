@@ -1,13 +1,13 @@
-rasaapi
+rasacli
 =======
 
 Rasa API CLI
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/rasaapi.svg)](https://npmjs.org/package/rasaapi)
-[![CircleCI](https://circleci.com/gh/rgstephens/rasaapi/tree/master.svg?style=shield)](https://circleci.com/gh/rgstephens/rasaapi/tree/master)
-[![Downloads/week](https://img.shields.io/npm/dw/rasaapi.svg)](https://npmjs.org/package/rasaapi)
-[![License](https://img.shields.io/npm/l/rasaapi.svg)](https://github.com/rgstephens/rasaapi/blob/master/package.json)
+[![Version](https://img.shields.io/npm/v/rasacli.svg)](https://npmjs.org/package/rasacli)
+[![CircleCI](https://circleci.com/gh/rgstephens/rasacli/tree/master.svg?style=shield)](https://circleci.com/gh/rgstephens/rasacli/tree/master)
+[![Downloads/week](https://img.shields.io/npm/dw/rasacli.svg)](https://npmjs.org/package/rasacli)
+[![License](https://img.shields.io/npm/l/rasacli.svg)](https://github.com/rgstephens/rasacli/blob/master/package.json)
 
 <!-- toc -->
 * [Usage](#usage)
@@ -17,35 +17,38 @@ Rasa API CLI
 <!-- usage -->
 ```sh-session
 $ npm install -g rasacli
-$ rasaapi COMMAND
+$ rasacli COMMAND
 running command...
-$ rasaapi (-v|--version|version)
+$ rasacli (-v|--version|version)
 rasacli/0.1.0 darwin-x64 node-v12.4.0
-$ rasaapi --help [COMMAND]
+$ rasacli --help [COMMAND]
 USAGE
-  $ rasaapi COMMAND
+  $ rasacli COMMAND
 ...
 ```
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`rasaapi addstories FILE`](#rasaapi-addstories-file)
-* [`rasaapi delstories`](#rasaapi-delstories)
-* [`rasaapi deltraining [PROJECT]`](#rasaapi-deltraining-project)
-* [`rasaapi getdomain`](#rasaapi-getdomain)
-* [`rasaapi getstories`](#rasaapi-getstories)
-* [`rasaapi getstoriesmd`](#rasaapi-getstoriesmd)
-* [`rasaapi gettraining [PROJECT]`](#rasaapi-gettraining-project)
-* [`rasaapi help [COMMAND]`](#rasaapi-help-command)
-* [`rasaapi upddomain FILE`](#rasaapi-upddomain-file)
+- [rasacli](#rasacli)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`rasacli addstories FILE`](#rasacli-addstories-file)
+  - [`rasacli delstories`](#rasacli-delstories)
+  - [`rasacli deltraining [PROJECT]`](#rasacli-deltraining-project)
+  - [`rasacli getdomain`](#rasacli-getdomain)
+  - [`rasacli getstories`](#rasacli-getstories)
+  - [`rasacli getstoriesmd`](#rasacli-getstoriesmd)
+  - [`rasacli gettraining [PROJECT]`](#rasacli-gettraining-project)
+  - [`rasacli help [COMMAND]`](#rasacli-help-command)
+  - [`rasacli upddomain FILE`](#rasacli-upddomain-file)
 
-## `rasaapi addstories FILE`
+## `rasacli addstories FILE`
 
 Add stories
 
 ```
 USAGE
-  $ rasaapi addstories FILE
+  $ rasacli addstories FILE
 
 ARGUMENTS
   FILE  Markdown story files (accepts multiple files)
@@ -60,15 +63,15 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/addstories.ts](https://github.com/rgstephens/rasaapi/blob/v0.1.0/src/commands/addstories.ts)_
+_See code: [src/commands/addstories.ts](https://github.com/rgstephens/rasacli/blob/v0.1.0/src/commands/addstories.ts)_
 
-## `rasaapi delstories`
+## `rasacli delstories`
 
 Delete all stories
 
 ```
 USAGE
-  $ rasaapi delstories
+  $ rasacli delstories
 
 OPTIONS
   -h, --help               show CLI help
@@ -80,15 +83,15 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/delstories.ts](https://github.com/rgstephens/rasaapi/blob/v0.1.0/src/commands/delstories.ts)_
+_See code: [src/commands/delstories.ts](https://github.com/rgstephens/rasacli/blob/v0.1.0/src/commands/delstories.ts)_
 
-## `rasaapi deltraining [PROJECT]`
+## `rasacli deltraining [PROJECT]`
 
 Delete all training data
 
 ```
 USAGE
-  $ rasaapi deltraining [PROJECT]
+  $ rasacli deltraining [PROJECT]
 
 ARGUMENTS
   PROJECT  [default: default] Project name
@@ -103,15 +106,15 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/deltraining.ts](https://github.com/rgstephens/rasaapi/blob/v0.1.0/src/commands/deltraining.ts)_
+_See code: [src/commands/deltraining.ts](https://github.com/rgstephens/rasacli/blob/v0.1.0/src/commands/deltraining.ts)_
 
-## `rasaapi getdomain`
+## `rasacli getdomain`
 
 Get training data
 
 ```
 USAGE
-  $ rasaapi getdomain
+  $ rasacli getdomain
 
 OPTIONS
   -h, --help               show CLI help
@@ -123,15 +126,15 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getdomain.ts](https://github.com/rgstephens/rasaapi/blob/v0.1.0/src/commands/getdomain.ts)_
+_See code: [src/commands/getdomain.ts](https://github.com/rgstephens/rasacli/blob/v0.1.0/src/commands/getdomain.ts)_
 
-## `rasaapi getstories`
+## `rasacli getstories`
 
 Get stories
 
 ```
 USAGE
-  $ rasaapi getstories
+  $ rasacli getstories
 
 OPTIONS
   -h, --help               show CLI help
@@ -143,15 +146,15 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getstories.ts](https://github.com/rgstephens/rasaapi/blob/v0.1.0/src/commands/getstories.ts)_
+_See code: [src/commands/getstories.ts](https://github.com/rgstephens/rasacli/blob/v0.1.0/src/commands/getstories.ts)_
 
-## `rasaapi getstoriesmd`
+## `rasacli getstoriesmd`
 
 Get stories as markdown
 
 ```
 USAGE
-  $ rasaapi getstoriesmd
+  $ rasacli getstoriesmd
 
 OPTIONS
   -h, --help               show CLI help
@@ -163,15 +166,15 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getstoriesmd.ts](https://github.com/rgstephens/rasaapi/blob/v0.1.0/src/commands/getstoriesmd.ts)_
+_See code: [src/commands/getstoriesmd.ts](https://github.com/rgstephens/rasacli/blob/v0.1.0/src/commands/getstoriesmd.ts)_
 
-## `rasaapi gettraining [PROJECT]`
+## `rasacli gettraining [PROJECT]`
 
 Get training data
 
 ```
 USAGE
-  $ rasaapi gettraining [PROJECT]
+  $ rasacli gettraining [PROJECT]
 
 ARGUMENTS
   PROJECT  [default: default] Project name
@@ -186,15 +189,15 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/gettraining.ts](https://github.com/rgstephens/rasaapi/blob/v0.1.0/src/commands/gettraining.ts)_
+_See code: [src/commands/gettraining.ts](https://github.com/rgstephens/rasacli/blob/v0.1.0/src/commands/gettraining.ts)_
 
-## `rasaapi help [COMMAND]`
+## `rasacli help [COMMAND]`
 
-display help for rasaapi
+display help for rasacli
 
 ```
 USAGE
-  $ rasaapi help [COMMAND]
+  $ rasacli help [COMMAND]
 
 ARGUMENTS
   COMMAND  command to show help for
@@ -205,13 +208,13 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.0/src/commands/help.ts)_
 
-## `rasaapi upddomain FILE`
+## `rasacli upddomain FILE`
 
 Update domain
 
 ```
 USAGE
-  $ rasaapi upddomain FILE
+  $ rasacli upddomain FILE
 
 ARGUMENTS
   FILE  Domain yaml file
@@ -226,5 +229,5 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/upddomain.ts](https://github.com/rgstephens/rasaapi/blob/v0.1.0/src/commands/upddomain.ts)_
+_See code: [src/commands/upddomain.ts](https://github.com/rgstephens/rasacli/blob/v0.1.0/src/commands/upddomain.ts)_
 <!-- commandsstop -->
