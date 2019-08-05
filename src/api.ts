@@ -79,7 +79,11 @@ export async function login(conn: Conn) {
       }
       process.env.RASA_TOKEN = await getToken(conn);
     } catch (error) {
-      throw new Error("login failed, user: " + conn.username + ", host: " + error.config.url);
+      if (error.config) {
+        throw new Error("login failed, user: " + conn.username + ", host: " + error.config.url);
+      } else {
+        throw error;
+      }
     }
   }
 }
@@ -242,6 +246,27 @@ export const updDomain = async (conn: Conn, yaml: string, storeTemplates: boolea
       responseType: "json",
       data: fs.createReadStream(yaml),
       headers: { "Content-Type": "text/markdown", "Content-Length": size, Authorization: "Bearer " + conn.token }
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const delDomain = async (conn: Conn, storeTemplates: boolean) => {
+  try {
+    let url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/domain";
+    //console.log('url:', url);
+    if (storeTemplates) {
+      url += "?store_templates=true";
+    }
+
+    const response = await axios({
+      url: url,
+      method: "PUT",
+      responseType: "json",
+      data: "",
+      headers: { "Content-Type": "text/markdown", "Content-Length": 0, Authorization: "Bearer " + conn.token }
     });
     return response;
   } catch (error) {

@@ -35,7 +35,7 @@ $ npm install -g rasacli
 $ rasacli COMMAND
 running command...
 $ rasacli (-v|--version|version)
-rasacli/0.1.1 darwin-x64 node-v12.4.0
+rasacli/0.1.2 darwin-x64 node-v12.4.0
 $ rasacli --help [COMMAND]
 USAGE
   $ rasacli COMMAND
@@ -45,6 +45,7 @@ USAGE
 # Commands
 <!-- commands -->
 * [`rasacli addstories FILE`](#rasacli-addstories-file)
+* [`rasacli deldomain [FILE]`](#rasacli-deldomain-file)
 * [`rasacli delstories`](#rasacli-delstories)
 * [`rasacli deltraining [PROJECT]`](#rasacli-deltraining-project)
 * [`rasacli getdomain`](#rasacli-getdomain)
@@ -70,13 +71,30 @@ OPTIONS
   -h, --help               show CLI help
   -n, --hostname=hostname  [default: localhost] hostname
   -p, --port=port          [default: 80] port
+  -v, --verbose            verbose
   --password=password      password
   --protocol=protocol      [default: http] protocol
   --token=token            token
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/addstories.ts](https://github.com/rgstephens/rasacli/blob/v0.1.1/src/commands/addstories.ts)_
+_See code: [src/commands/addstories.ts](https://github.com/rgstephens/rasacli/blob/v0.1.2/src/commands/addstories.ts)_
+
+## `rasacli deldomain [FILE]`
+
+describe the command here
+
+```
+USAGE
+  $ rasacli deldomain [FILE]
+
+OPTIONS
+  -f, --force
+  -h, --help       show CLI help
+  -n, --name=name  name to print
+```
+
+_See code: [src/commands/deldomain.ts](https://github.com/rgstephens/rasacli/blob/v0.1.2/src/commands/deldomain.ts)_
 
 ## `rasacli delstories`
 
@@ -90,13 +108,14 @@ OPTIONS
   -h, --help               show CLI help
   -n, --hostname=hostname  [default: localhost] hostname
   -p, --port=port          [default: 80] port
+  -v, --verbose            verbose
   --password=password      password
   --protocol=protocol      [default: http] protocol
   --token=token            token
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/delstories.ts](https://github.com/rgstephens/rasacli/blob/v0.1.1/src/commands/delstories.ts)_
+_See code: [src/commands/delstories.ts](https://github.com/rgstephens/rasacli/blob/v0.1.2/src/commands/delstories.ts)_
 
 ## `rasacli deltraining [PROJECT]`
 
@@ -113,13 +132,14 @@ OPTIONS
   -h, --help               show CLI help
   -n, --hostname=hostname  [default: localhost] hostname
   -p, --port=port          [default: 80] port
+  -v, --verbose            verbose
   --password=password      password
   --protocol=protocol      [default: http] protocol
   --token=token            token
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/deltraining.ts](https://github.com/rgstephens/rasacli/blob/v0.1.1/src/commands/deltraining.ts)_
+_See code: [src/commands/deltraining.ts](https://github.com/rgstephens/rasacli/blob/v0.1.2/src/commands/deltraining.ts)_
 
 ## `rasacli getdomain`
 
@@ -133,13 +153,14 @@ OPTIONS
   -h, --help               show CLI help
   -n, --hostname=hostname  [default: localhost] hostname
   -p, --port=port          [default: 80] port
+  -v, --verbose            verbose
   --password=password      password
   --protocol=protocol      [default: http] protocol
   --token=token            token
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getdomain.ts](https://github.com/rgstephens/rasacli/blob/v0.1.1/src/commands/getdomain.ts)_
+_See code: [src/commands/getdomain.ts](https://github.com/rgstephens/rasacli/blob/v0.1.2/src/commands/getdomain.ts)_
 
 ## `rasacli getstories`
 
@@ -153,13 +174,14 @@ OPTIONS
   -h, --help               show CLI help
   -n, --hostname=hostname  [default: localhost] hostname
   -p, --port=port          [default: 80] port
+  -v, --verbose            verbose
   --password=password      password
   --protocol=protocol      [default: http] protocol
   --token=token            token
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getstories.ts](https://github.com/rgstephens/rasacli/blob/v0.1.1/src/commands/getstories.ts)_
+_See code: [src/commands/getstories.ts](https://github.com/rgstephens/rasacli/blob/v0.1.2/src/commands/getstories.ts)_
 
 ## `rasacli getstoriesmd`
 
@@ -173,13 +195,14 @@ OPTIONS
   -h, --help               show CLI help
   -n, --hostname=hostname  [default: localhost] hostname
   -p, --port=port          [default: 80] port
+  -v, --verbose            verbose
   --password=password      password
   --protocol=protocol      [default: http] protocol
   --token=token            token
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getstoriesmd.ts](https://github.com/rgstephens/rasacli/blob/v0.1.1/src/commands/getstoriesmd.ts)_
+_See code: [src/commands/getstoriesmd.ts](https://github.com/rgstephens/rasacli/blob/v0.1.2/src/commands/getstoriesmd.ts)_
 
 ## `rasacli gettraining [PROJECT]`
 
@@ -196,13 +219,14 @@ OPTIONS
   -h, --help               show CLI help
   -n, --hostname=hostname  [default: localhost] hostname
   -p, --port=port          [default: 80] port
+  -v, --verbose            verbose
   --password=password      password
   --protocol=protocol      [default: http] protocol
   --token=token            token
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/gettraining.ts](https://github.com/rgstephens/rasacli/blob/v0.1.1/src/commands/gettraining.ts)_
+_See code: [src/commands/gettraining.ts](https://github.com/rgstephens/rasacli/blob/v0.1.2/src/commands/gettraining.ts)_
 
 ## `rasacli help [COMMAND]`
 
@@ -236,14 +260,15 @@ OPTIONS
   -h, --help               show CLI help
   -n, --hostname=hostname  [default: localhost] hostname
   -p, --port=port          [default: 80] port
-  -t, --templates          Store templates
+  -t, --templates          Store templates option
+  -v, --verbose            verbose
   --password=password      password
   --protocol=protocol      [default: http] protocol
   --token=token            token
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/upddomain.ts](https://github.com/rgstephens/rasacli/blob/v0.1.1/src/commands/upddomain.ts)_
+_See code: [src/commands/upddomain.ts](https://github.com/rgstephens/rasacli/blob/v0.1.2/src/commands/upddomain.ts)_
 
 ## `rasacli updstories FILE`
 
@@ -260,11 +285,12 @@ OPTIONS
   -h, --help               show CLI help
   -n, --hostname=hostname  [default: localhost] hostname
   -p, --port=port          [default: 80] port
+  -v, --verbose            verbose
   --password=password      password
   --protocol=protocol      [default: http] protocol
   --token=token            token
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/updstories.ts](https://github.com/rgstephens/rasacli/blob/v0.1.1/src/commands/updstories.ts)_
+_See code: [src/commands/updstories.ts](https://github.com/rgstephens/rasacli/blob/v0.1.2/src/commands/updstories.ts)_
 <!-- commandsstop -->

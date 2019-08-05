@@ -1,8 +1,8 @@
 import {Command, flags} from '@oclif/command'
-import { login, getStories, Conn } from '../api'
+import { login, delDomain, Conn } from '../api'
 
-export default class Getstories extends Command {
-  static description = 'Get stories'
+export default class Deldomain extends Command {
+  static description = 'Update domain'
 
   static flags = {
     help: flags.help({char: 'h'}),
@@ -12,6 +12,7 @@ export default class Getstories extends Command {
     protocol: flags.string({description: 'protocol', default: 'http', env: 'RASA_PROTO'}),
     username: flags.string({description: 'username', default: 'me', env: 'RASA_USER'}),
     password: flags.string({description: 'password', env: 'RASA_PASS'}),
+    templates: flags.boolean({char: 't', description: 'Store templates option'}),
     token: flags.string({description: 'token', env: 'RASA_TOKEN'}),
   }
 
@@ -20,13 +21,13 @@ export default class Getstories extends Command {
   conn: Conn = { hostname: '', port: '', protocol: '' };
 
   async run() {
-    const {args, flags} = this.parse(Getstories)
+    const {args, flags} = this.parse(Deldomain)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
 
     try {
       await login(this.conn);
-      var docs = await getStories(this.conn);
-      console.log(docs);
+      const resp = await delDomain(this.conn, flags.templates);
+      console.log('Removed domain, status:', resp.status);
     } catch (error) {
       throw error;
     }
