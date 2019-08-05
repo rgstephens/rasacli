@@ -1,8 +1,8 @@
 import {Command, flags} from '@oclif/command'
-import { login, getStories, Conn } from '../api'
+import { login, updStories, addStories, Conn, parseFilenames } from '../api'
 
-export default class Getstories extends Command {
-  static description = 'Get stories'
+export default class Updstories extends Command {
+  static description = 'Update stories'
 
   static flags = {
     help: flags.help({char: 'h'}),
@@ -15,18 +15,34 @@ export default class Getstories extends Command {
     token: flags.string({description: 'token', env: 'RASA_TOKEN'}),
   }
 
-  static args = []
+  static args = [{name: 'file', required: true, description: 'Markdown story files (accepts multiple files)'}]
+
+  static strict = false
 
   conn: Conn = { hostname: '', port: '', protocol: '' };
 
+  async updStory(conn: Conn, fileList: string[]) {
+    fileList.forEach(async (filename, i) => {
+      if (i>0) {
+        const docs = await addStories(conn, filename);
+        console.log(docs.data.length, 'stories added from', filename);
+      } else {
+        const docs = await updStories(conn, filename);
+        console.log(docs.data.length, 'stories replaced from', filename);
+      }
+    })
+  }
+
   async run() {
-    const {args, flags} = this.parse(Getstories)
+    const {args, flags} = this.parse(Updstories)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
+
+    const fileList = parseFilenames(process.argv);
+    //console.log('fileList:', fileList);
 
     try {
       await login(this.conn);
-      var docs = await getStories(this.conn);
-      console.log(docs);
+      var docCount = await this.updStory(this.conn, fileList);
     } catch (error) {
       throw error;
     }

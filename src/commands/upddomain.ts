@@ -3,20 +3,21 @@ import { login, updDomain, Conn } from '../api'
 
 export default class Upddomain extends Command {
   static description = 'Update domain'
+  static strict = false
 
   static flags = {
     help: flags.help({char: 'h'}),
+    verbose: flags.help({char: 'v'}),
     hostname: flags.string({char: 'n', description: 'hostname', default: 'localhost', env: 'RASA_HOST'}),
     port: flags.string({char: 'p', description: 'port', default: '80', env: 'RASA_PORT'}),
     protocol: flags.string({description: 'protocol', default: 'http', env: 'RASA_PROTO'}),
     username: flags.string({description: 'username', default: 'me', env: 'RASA_USER'}),
     password: flags.string({description: 'password', env: 'RASA_PASS'}),
+    templates: flags.boolean({char: 't', description: 'Store templates'}),
     token: flags.string({description: 'token', env: 'RASA_TOKEN'}),
   }
 
   static args = [{name: 'file', required: true, description: 'Domain yaml file'}]
-
-  static strict = false
 
   conn: Conn = { hostname: '', port: '', protocol: '' };
   
@@ -26,7 +27,7 @@ export default class Upddomain extends Command {
 
     try {
       await login(this.conn);
-      const resp = await updDomain(this.conn, args.file);
+      const resp = await updDomain(this.conn, args.file, flags.templates);
       console.log('Domain updated from', args.file, 'status:', resp.status);
     } catch (error) {
       throw error;

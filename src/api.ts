@@ -1,5 +1,5 @@
-import axios from 'axios';
-import * as fs from 'fs';
+import axios from "axios";
+import * as fs from "fs";
 
 export interface Conn {
   hostname: string;
@@ -8,6 +8,26 @@ export interface Conn {
   username?: string;
   password?: string;
   token?: string;
+}
+
+export function parseFilenames(args: string[]) {
+  let filenames: string[] = [];
+  let parmFound = false;
+  args.forEach((element, i) => {
+    if (i > 2) {
+      if (element.startsWith('-'))  {
+        parmFound = true;
+      }
+      if (!parmFound) {
+        const fileList = element.split(',');
+        fileList.forEach(name => {
+          filenames.push(name);
+        })
+      }
+    }
+  });
+  //console.log('filenames:', filenames);
+  return filenames;
 }
 
 export async function getChatToken(conn: Conn) {
@@ -44,23 +64,22 @@ export async function login(conn: Conn) {
       // try logging in with username/password
       try {
         process.env.RASA_TOKEN = await getToken(conn);
-        //console.log("login, is token set, conn:", conn);
       } catch (error) {
-        //console.error("login 1", error);
         throw error;
       }
     }
   } else {
     // no token, login with username/password
     try {
-      if (!conn.username || !conn.password) {
-        throw new Error("password not provided");
+      if (!conn.username) {
+        throw new Error("login failed, username not provided");
+      }
+      if (!conn.password) {
+        throw new Error("login failed, password not provided");
       }
       process.env.RASA_TOKEN = await getToken(conn);
-      //console.log("login, is token set, conn:", conn);
     } catch (error) {
-      //console.error("login", error);
-      throw error;
+      throw new Error("login failed, user: " + conn.username + ", host: " + error.config.url);
     }
   }
 }
@@ -105,18 +124,45 @@ export const addStories = async (conn: Conn, md: string) => {
     const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/stories";
 
     const mdStream = fs.createReadStream(md);
-    mdStream.on('error', console.log);
-    const {size} = fs.statSync(md);
+    mdStream.on("error", console.log);
+    const { size } = fs.statSync(md);
 
     //console.log(md, "=", mdStream);
 
-    const response = await axios({ url: url, method: 'POST', responseType: 'json', data: fs.createReadStream(md),
-      headers: { 'Content-Type': 'text/markdown', 'Content-Length': size, Authorization: "Bearer " + conn.token }});
+    const response = await axios({
+      url: url,
+      method: "POST",
+      responseType: "json",
+      data: fs.createReadStream(md),
+      headers: { "Content-Type": "text/markdown", "Content-Length": size, Authorization: "Bearer " + conn.token }
+    });
+    return response;
+  } catch (error) {
+    console.log('error:', error);
+    throw error;
+  }
+};
+
+export const updStories = async (conn: Conn, md: string) => {
+  try {
+    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/stories";
+
+    const mdStream = fs.createReadStream(md);
+    mdStream.on("error", console.log);
+    const { size } = fs.statSync(md);
+
+    const response = await axios({
+      url: url,
+      method: "PUT",
+      responseType: "json",
+      data: fs.createReadStream(md),
+      headers: { "Content-Type": "text/markdown", "Content-Length": size, Authorization: "Bearer " + conn.token }
+    });
     return response;
   } catch (error) {
     throw error;
   }
-}
+};
 
 export const getTraining = async (conn: Conn, project: string): Promise<any> => {
   try {
@@ -149,18 +195,23 @@ export const addTraining = async (conn: Conn, md: string) => {
     const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/stories";
 
     const mdStream = fs.createReadStream(md);
-    mdStream.on('error', console.log);
-    const {size} = fs.statSync(md);
+    mdStream.on("error", console.log);
+    const { size } = fs.statSync(md);
 
     //console.log(md, "=", mdStream);
 
-    const response = await axios({ url: url, method: 'POST', responseType: 'json', data: fs.createReadStream(md),
-      headers: { 'Content-Type': 'text/markdown', 'Content-Length': size, Authorization: "Bearer " + conn.token }});
+    const response = await axios({
+      url: url,
+      method: "POST",
+      responseType: "json",
+      data: fs.createReadStream(md),
+      headers: { "Content-Type": "text/markdown", "Content-Length": size, Authorization: "Bearer " + conn.token }
+    });
     return response;
   } catch (error) {
     throw error;
   }
-}
+};
 
 export const getDomain = async (conn: Conn): Promise<any> => {
   try {
@@ -173,18 +224,27 @@ export const getDomain = async (conn: Conn): Promise<any> => {
   }
 };
 
-export const updDomain = async (conn: Conn, yaml: string) => {
+export const updDomain = async (conn: Conn, yaml: string, storeTemplates: boolean) => {
   try {
-    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/domain?store_templates=true";
+    let url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/domain";
+    if (storeTemplates) {
+      url += "?store_templates=true";
+    }
 
     const fileStream = fs.createReadStream(yaml);
-    fileStream.on('error', console.log);
-    const {size} = fs.statSync(yaml);
+    fileStream.on("error", console.log);
+    const { size } = fs.statSync(yaml);
+    console.log("url:", url);
 
-    const response = await axios({ url: url, method: 'PUT', responseType: 'json', data: fs.createReadStream(yaml),
-      headers: { 'Content-Type': 'text/markdown', 'Content-Length': size, Authorization: "Bearer " + conn.token }});
+    const response = await axios({
+      url: url,
+      method: "PUT",
+      responseType: "json",
+      data: fs.createReadStream(yaml),
+      headers: { "Content-Type": "text/markdown", "Content-Length": size, Authorization: "Bearer " + conn.token }
+    });
     return response;
   } catch (error) {
     throw error;
   }
-}
+};

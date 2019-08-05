@@ -9,10 +9,25 @@ Rasa API CLI
 [![Downloads/week](https://img.shields.io/npm/dw/rasacli.svg)](https://npmjs.org/package/rasacli)
 [![License](https://img.shields.io/npm/l/rasacli.svg)](https://github.com/rgstephens/rasacli/blob/master/package.json)
 
+This command line tool has initially been developed to import content from existint Rasa bots to Rasa X and to clean-up Rasa X so that you can more easily remove all of the content and upload new content on the same instance.
+
+It has been developed in TypeScript with [oclif](https://oclif.io).
+
 <!-- toc -->
+* [Release Notes](#release-notes)
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
+# Release Notes
+
+#### 0.1.1 - Jul 23, 2019
+
+Initial set of commands: `addstories`, `delstories`, `deltraining`, `getdomain`, `getstories`, `getstoriesmd`, `gettraining`, `upddomain`
+
+#### 0.1.2 - Jul 24, 2019
+
+`upddomain` command added `-t` option to specify update of templates. See API domain [PUT](https://rasa.com/docs/rasa-x/api/rasa-x-http-api/#operation/updateDomain) for details on `store_templates` option along with Rasa X API Github issue [#4080](https://github.com/RasaHQ/rasa/issues/4080).
+
 # Usage
 <!-- usage -->
 ```sh-session
@@ -38,6 +53,7 @@ USAGE
 * [`rasacli gettraining [PROJECT]`](#rasacli-gettraining-project)
 * [`rasacli help [COMMAND]`](#rasacli-help-command)
 * [`rasacli upddomain FILE`](#rasacli-upddomain-file)
+* [`rasacli updstories FILE`](#rasacli-updstories-file)
 
 ## `rasacli addstories FILE`
 
@@ -220,6 +236,7 @@ OPTIONS
   -h, --help               show CLI help
   -n, --hostname=hostname  [default: localhost] hostname
   -p, --port=port          [default: 80] port
+  -t, --templates          Store templates
   --password=password      password
   --protocol=protocol      [default: http] protocol
   --token=token            token
@@ -227,4 +244,27 @@ OPTIONS
 ```
 
 _See code: [src/commands/upddomain.ts](https://github.com/rgstephens/rasacli/blob/v0.1.1/src/commands/upddomain.ts)_
+
+## `rasacli updstories FILE`
+
+Update stories
+
+```
+USAGE
+  $ rasacli updstories FILE
+
+ARGUMENTS
+  FILE  Markdown story files (accepts multiple files)
+
+OPTIONS
+  -h, --help               show CLI help
+  -n, --hostname=hostname  [default: localhost] hostname
+  -p, --port=port          [default: 80] port
+  --password=password      password
+  --protocol=protocol      [default: http] protocol
+  --token=token            token
+  --username=username      [default: me] username
+```
+
+_See code: [src/commands/updstories.ts](https://github.com/rgstephens/rasacli/blob/v0.1.1/src/commands/updstories.ts)_
 <!-- commandsstop -->
