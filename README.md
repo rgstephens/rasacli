@@ -116,6 +116,8 @@ Added `deldomain` command which is the same as an `upddomain` but with an empty 
 
 * Added `updtemplates` to update response templates. This replaces `upddomain -t`
 * Added `getentities` command
+* Added `deltemplates` to replace `deldomain -t` but discovered a bug in this api, see [#4185](https://github.com/RasaHQ/rasa/issues/4185)
+* Added `delall` command which calls all of the delete commands supported by `rasacli`
 
 # Usage
 
@@ -136,21 +138,36 @@ USAGE
 # Commands
 
 <!-- commands -->
-* [`rasacli addstories FILE`](#rasacli-addstories-file)
-* [`rasacli delall [FILE]`](#rasacli-delall-file)
-* [`rasacli deldomain`](#rasacli-deldomain)
-* [`rasacli delstories`](#rasacli-delstories)
-* [`rasacli deltemplates`](#rasacli-deltemplates)
-* [`rasacli deltraining [PROJECT]`](#rasacli-deltraining-project)
-* [`rasacli getdomain`](#rasacli-getdomain)
-* [`rasacli getentities [PROJECT]`](#rasacli-getentities-project)
-* [`rasacli getstories`](#rasacli-getstories)
-* [`rasacli getstoriesmd`](#rasacli-getstoriesmd)
-* [`rasacli gettraining [PROJECT]`](#rasacli-gettraining-project)
-* [`rasacli help [COMMAND]`](#rasacli-help-command)
-* [`rasacli upddomain FILE`](#rasacli-upddomain-file)
-* [`rasacli updstories FILE`](#rasacli-updstories-file)
-* [`rasacli updtemplates FILE`](#rasacli-updtemplates-file)
+- [rasacli](#rasacli)
+  - [Rasa X UI & API](#rasa-x-ui--api)
+    - [NLU Training Data](#nlu-training-data)
+    - [Core Stories](#core-stories)
+    - [Template Responses](#template-responses)
+    - [Domain](#domain)
+  - [Examples](#examples)
+  - [Environment Variables](#environment-variables)
+- [Release Notes](#release-notes)
+      - [0.1.1 - Jul 23, 2019](#011---jul-23-2019)
+      - [0.1.2 - Jul 24, 2019](#012---jul-24-2019)
+      - [0.1.3 - Aug 4, 2019](#013---aug-4-2019)
+      - [0.2.0 - Aug 6, 2019](#020---aug-6-2019)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`rasacli addstories FILE`](#rasacli-addstories-file)
+  - [`rasacli delall [FILE]`](#rasacli-delall-file)
+  - [`rasacli deldomain`](#rasacli-deldomain)
+  - [`rasacli delstories`](#rasacli-delstories)
+  - [`rasacli deltemplates`](#rasacli-deltemplates)
+  - [`rasacli deltraining [PROJECT]`](#rasacli-deltraining-project)
+  - [`rasacli getdomain`](#rasacli-getdomain)
+  - [`rasacli getentities [PROJECT]`](#rasacli-getentities-project)
+  - [`rasacli getstories`](#rasacli-getstories)
+  - [`rasacli getstoriesmd`](#rasacli-getstoriesmd)
+  - [`rasacli gettraining [PROJECT]`](#rasacli-gettraining-project)
+  - [`rasacli help [COMMAND]`](#rasacli-help-command)
+  - [`rasacli upddomain FILE`](#rasacli-upddomain-file)
+  - [`rasacli updstories FILE`](#rasacli-updstories-file)
+  - [`rasacli updtemplates FILE`](#rasacli-updtemplates-file)
 
 ## `rasacli addstories FILE`
 
