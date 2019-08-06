@@ -108,6 +108,13 @@ export const getStoriesMarkdown = async (conn: Conn): Promise<string> => {
   }
 };
 
+export async function delStories (conn: Conn, docs: [any]) {
+  docs.forEach(async (doc) => {
+    //console.log("Deleting id", doc.id)
+    const status = await delStory(conn, doc.id);
+  })
+}
+
 export async function delStory(conn: Conn, id: number) {
   try {
     //await login(conn);
@@ -179,6 +186,22 @@ export const getTraining = async (conn: Conn, project: string): Promise<any> => 
   }
 };
 
+export const getEntities = async (conn: Conn, project: string): Promise<any> => {
+  try {
+    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/entities";
+    const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export async function delTrainingAll (conn: Conn, project: string, docs: [any]) {
+  docs.forEach(async (doc) => {
+    const status = await delTraining(conn, project, doc.id);
+  })
+}
+
 export async function delTraining(conn: Conn, project: string, id: number) {
   try {
     //await login(conn);
@@ -238,7 +261,7 @@ export const updDomain = async (conn: Conn, yaml: string, storeTemplates: boolea
     const fileStream = fs.createReadStream(yaml);
     fileStream.on("error", console.log);
     const { size } = fs.statSync(yaml);
-    console.log("url:", url);
+    //console.log("url:", url);
 
     const response = await axios({
       url: url,

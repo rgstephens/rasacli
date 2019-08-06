@@ -2,7 +2,7 @@ import {Command, flags} from '@oclif/command'
 import { login, delDomain, Conn } from '../api'
 
 export default class Deldomain extends Command {
-  static description = 'Update domain'
+  static description = 'Delete domain'
 
   static flags = {
     help: flags.help({char: 'h'}),
@@ -12,7 +12,6 @@ export default class Deldomain extends Command {
     protocol: flags.string({description: 'protocol', default: 'http', env: 'RASA_PROTO'}),
     username: flags.string({description: 'username', default: 'me', env: 'RASA_USER'}),
     password: flags.string({description: 'password', env: 'RASA_PASS'}),
-    templates: flags.boolean({char: 't', description: 'Store templates option'}),
     token: flags.string({description: 'token', env: 'RASA_TOKEN'}),
   }
 
@@ -26,7 +25,7 @@ export default class Deldomain extends Command {
 
     try {
       await login(this.conn);
-      const resp = await delDomain(this.conn, flags.templates);
+      const resp = await delDomain(this.conn, false);
       console.log('Removed domain, status:', resp.status);
     } catch (error) {
       throw error;

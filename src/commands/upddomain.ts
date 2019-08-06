@@ -13,7 +13,6 @@ export default class Upddomain extends Command {
     protocol: flags.string({description: 'protocol', default: 'http', env: 'RASA_PROTO'}),
     username: flags.string({description: 'username', default: 'me', env: 'RASA_USER'}),
     password: flags.string({description: 'password', env: 'RASA_PASS'}),
-    templates: flags.boolean({char: 't', description: 'Store templates option'}),
     token: flags.string({description: 'token', env: 'RASA_TOKEN'}),
   }
 
@@ -27,7 +26,7 @@ export default class Upddomain extends Command {
 
     try {
       await login(this.conn);
-      const resp = await updDomain(this.conn, args.file, flags.templates);
+      const resp = await updDomain(this.conn, args.file, false);
       console.log('Domain updated from', args.file, 'status:', resp.status);
     } catch (error) {
       throw error;

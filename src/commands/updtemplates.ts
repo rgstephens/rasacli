@@ -1,10 +1,9 @@
 import {Command, flags} from '@oclif/command'
-import { getTraining, delTrainingAll, login, Conn } from '../api'
+import { login, updDomain, Conn } from '../api'
 
-export default class Deltraining extends Command {
-  conn: Conn = { hostname: '', port: '', protocol: '' };
-
-  static description = 'Delete all training data'
+export default class Updtemplates extends Command {
+  static description = 'Update templates'
+  static strict = false
 
   static flags = {
     help: flags.help({char: 'h'}),
@@ -17,18 +16,18 @@ export default class Deltraining extends Command {
     token: flags.string({description: 'token', env: 'RASA_TOKEN'}),
   }
 
-  static args = [{name: 'project', default: 'default', description: 'Project name'}]
+  static args = [{name: 'file', required: true, description: 'Domain yaml file'}]
+
+  conn: Conn = { hostname: '', port: '', protocol: '' };
 
   async run() {
-    const {args, flags} = this.parse(Deltraining)
+    const {args, flags} = this.parse(Updtemplates)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
 
     try {
       await login(this.conn);
-      var docs = await getTraining(this.conn, args.project);
-      console.log("Deleting", docs.length, "training");
-      //console.log(docs)
-      const status: any = await delTrainingAll(this.conn, args.project, docs)
+      const resp = await updDomain(this.conn, args.file, true);
+      console.log('Templates updated from', args.file, 'status:', resp.status);
     } catch (error) {
       throw error;
     }

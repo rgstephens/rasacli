@@ -1,10 +1,8 @@
 import {Command, flags} from '@oclif/command'
-import { getTraining, delTrainingAll, login, Conn } from '../api'
+import { login, delDomain, Conn } from '../api'
 
-export default class Deltraining extends Command {
-  conn: Conn = { hostname: '', port: '', protocol: '' };
-
-  static description = 'Delete all training data'
+export default class Deltemplates extends Command {
+  static description = 'Delete templates'
 
   static flags = {
     help: flags.help({char: 'h'}),
@@ -17,18 +15,18 @@ export default class Deltraining extends Command {
     token: flags.string({description: 'token', env: 'RASA_TOKEN'}),
   }
 
-  static args = [{name: 'project', default: 'default', description: 'Project name'}]
+  static args = []
+
+  conn: Conn = { hostname: '', port: '', protocol: '' };
 
   async run() {
-    const {args, flags} = this.parse(Deltraining)
+    const {args, flags} = this.parse(Deltemplates)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
 
     try {
       await login(this.conn);
-      var docs = await getTraining(this.conn, args.project);
-      console.log("Deleting", docs.length, "training");
-      //console.log(docs)
-      const status: any = await delTrainingAll(this.conn, args.project, docs)
+      const resp = await delDomain(this.conn, true);
+      console.log('Removed domain, status:', resp.status);
     } catch (error) {
       throw error;
     }

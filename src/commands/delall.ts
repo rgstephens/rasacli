@@ -1,10 +1,8 @@
 import {Command, flags} from '@oclif/command'
-import { getTraining, delTrainingAll, login, Conn } from '../api'
+import { login, delDomain, getTraining, delTrainingAll, getStories, delStories, Conn } from '../api'
 
-export default class Deltraining extends Command {
-  conn: Conn = { hostname: '', port: '', protocol: '' };
-
-  static description = 'Delete all training data'
+export default class Delall extends Command {
+  static description = 'Update domain'
 
   static flags = {
     help: flags.help({char: 'h'}),
@@ -19,16 +17,29 @@ export default class Deltraining extends Command {
 
   static args = [{name: 'project', default: 'default', description: 'Project name'}]
 
+  conn: Conn = { hostname: '', port: '', protocol: '' };
+
   async run() {
-    const {args, flags} = this.parse(Deltraining)
+    const {args, flags} = this.parse(Delall)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
 
     try {
       await login(this.conn);
-      var docs = await getTraining(this.conn, args.project);
+      // Delete domain
+      let resp = await delDomain(this.conn, false);
+      console.log('Removed domain, status:', resp.status);
+      // Delete templates
+      resp = await delDomain(this.conn, true);
+      console.log('Removed templates, status:', resp.status);
+      // Delete NLU training data
+      let docs = await getTraining(this.conn, args.project);
       console.log("Deleting", docs.length, "training");
       //console.log(docs)
-      const status: any = await delTrainingAll(this.conn, args.project, docs)
+      let status: any = await delTrainingAll(this.conn, args.project, docs)
+      // Delete stories
+      docs = await getStories(this.conn);
+      console.log("Deleting", docs.length, "stories");
+      status = await delStories(this.conn, docs)
     } catch (error) {
       throw error;
     }
