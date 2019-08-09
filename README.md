@@ -22,20 +22,20 @@ In past releases of Rasa, the NLU training data could be formatted as `json` or 
 
 Please note that the tables below refer to **bulk** operations unless otherwise noted. The UI supports CRUD operations on individual items.
 
-| Capability          | UI  | API | rasacli       | Notes                                                                                                                  |
-| ------------------- | :-: | :-: | ------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| Get (md)            |     |     |               | See issue [#4076](https://github.com/RasaHQ/rasa/issues/4076)                                                          |
-| Get (json)          |     |  x  |               | See issue [#4175](https://github.com/RasaHQ/rasa/issues/4175)                                                          |
-| Get entities (json) |     |  x  |               |                                                                                                                        |
-| Get intents (json)  |     |  x  |               |                                                                                                                        |
-| Add (md)            |  x  |     |               | See issues [#4076](https://github.com/RasaHQ/rasa/issues/4076) and [#3580](https://github.com/RasaHQ/rasa/issues/3580) |
-| Add (json)          |  x  |  x  |               |                                                                                                                        |
-| Update (md)         |     |     |               | See issue [#4076](https://github.com/RasaHQ/rasa/issues/4076)                                                          |
-| Update (json)       |     |  x  |               |                                                                                                                        |
-| Update by id (md)   |  x  |     |               |                                                                                                                        |
-| Update by id (json) |  x  |  x  |               |                                                                                                                        |
-| Delete              |     |     | `deltraining` |                                                                                                                        |
-| Delete by id        |  x  |  x  |               |                                                                                                                        |
+| Capability          | UI  | API | rasacli               | Notes                                                                                                                  |
+| ------------------- | :-: | :-: | --------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Get (md)            |     |     |                       | See issue [#4076](https://github.com/RasaHQ/rasa/issues/4076)                                                          |
+| Get (json)          |     |  x  | `gettraining`         |                                                                                                                        |
+| Get entities (json) |     |  x  | `getentities`         |                                                                                                                        |
+| Get intents (json)  |     |  x  |                       |                                                                                                                        |
+| Add (md)            |  x  |     |                       | See issues [#4076](https://github.com/RasaHQ/rasa/issues/4076) and [#3580](https://github.com/RasaHQ/rasa/issues/3580) |
+| Add (json)          |  x  |  x  |                       |                                                                                                                        |
+| Update (md)         |     |     | `updtraining`         |                                                                                                                        |
+| Update (json)       |     |  x  | `updtraining -f json` |                                                                                                                        |
+| Update by id (md)   |  x  |     |                       |                                                                                                                        |
+| Update by id (json) |  x  |  x  |                       |                                                                                                                        |
+| Delete              |     |     | `deltraining`         |                                                                                                                        |
+| Delete by id        |  x  |  x  |                       |                                                                                                                        |
 
 ### Core Stories
 
@@ -55,8 +55,8 @@ Please note that the tables below refer to **bulk** operations unless otherwise 
 | ------------- | :-: | :-: | -------------- | ----- |
 | Get           |  x  |  x  |                |       |
 | Add (json)    |  x  |  x  |                |       |
-| Update (json) |     |  x  | `upddomain -t` |       |
-| Delete        |     |  x  | `deldomain -t` |       |
+| Update (json) |     |  x  | `updtemplates` |       |
+| Delete        |     |  x  | `deltemplates` |       |
 
 ### Domain
 
@@ -72,10 +72,7 @@ Please note that the tables below refer to **bulk** operations unless otherwise 
 To remove all content:
 
 ```sh
-rasacli deldomain
-rasacli deldomain -t
-rasacli deltraining
-rasacli delstories
+rasacli delall
 ```
 
 ## Environment Variables
@@ -114,10 +111,14 @@ Added `deldomain` command which is the same as an `upddomain` but with an empty 
 
 #### 0.2.0 - Aug 6, 2019
 
-* Added `updtemplates` to update response templates. This replaces `upddomain -t`
-* Added `getentities` command
-* Added `deltemplates` to replace `deldomain -t` but discovered a bug in this api, see [#4185](https://github.com/RasaHQ/rasa/issues/4185)
-* Added `delall` command which calls all of the delete commands supported by `rasacli`
+- Added `updtemplates` to update response templates. This replaces `upddomain -t`
+- Added `getentities` command
+- Added `deltemplates` to replace `deldomain -t` but discovered a bug in this api, see [#4185](https://github.com/RasaHQ/rasa/issues/4185)
+- Added `delall` command which calls all of the delete commands supported by `rasacli`
+
+#### 0.3.0 - Aug 8, 2019
+
+- Added `updtraining` to replace NLU training data. Accepts a list of markdown files.
 
 # Usage
 
@@ -127,7 +128,7 @@ $ npm install -g rasacli
 $ rasacli COMMAND
 running command...
 $ rasacli (-v|--version|version)
-rasacli/0.2.0 darwin-x64 node-v12.4.0
+rasacli/0.3.0 darwin-x64 node-v12.4.0
 $ rasacli --help [COMMAND]
 USAGE
   $ rasacli COMMAND
@@ -143,7 +144,7 @@ USAGE
 * [`rasacli deldomain`](#rasacli-deldomain)
 * [`rasacli delstories`](#rasacli-delstories)
 * [`rasacli deltemplates`](#rasacli-deltemplates)
-* [`rasacli deltraining [PROJECT]`](#rasacli-deltraining-project)
+* [`rasacli deltraining`](#rasacli-deltraining)
 * [`rasacli getdomain`](#rasacli-getdomain)
 * [`rasacli getentities [PROJECT]`](#rasacli-getentities-project)
 * [`rasacli getstories`](#rasacli-getstories)
@@ -153,6 +154,7 @@ USAGE
 * [`rasacli upddomain FILE`](#rasacli-upddomain-file)
 * [`rasacli updstories FILE`](#rasacli-updstories-file)
 * [`rasacli updtemplates FILE`](#rasacli-updtemplates-file)
+* [`rasacli updtraining FILE`](#rasacli-updtraining-file)
 
 ## `rasacli addstories FILE`
 
@@ -176,7 +178,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/addstories.ts](https://github.com/rgstephens/rasacli/blob/v0.2.0/src/commands/addstories.ts)_
+_See code: [src/commands/addstories.ts](https://github.com/rgstephens/rasacli/blob/v0.3.0/src/commands/addstories.ts)_
 
 ## `rasacli delall [PROJECT]`
 
@@ -200,7 +202,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/delall.ts](https://github.com/rgstephens/rasacli/blob/v0.2.0/src/commands/delall.ts)_
+_See code: [src/commands/delall.ts](https://github.com/rgstephens/rasacli/blob/v0.3.0/src/commands/delall.ts)_
 
 ## `rasacli deldomain`
 
@@ -221,7 +223,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/deldomain.ts](https://github.com/rgstephens/rasacli/blob/v0.2.0/src/commands/deldomain.ts)_
+_See code: [src/commands/deldomain.ts](https://github.com/rgstephens/rasacli/blob/v0.3.0/src/commands/deldomain.ts)_
 
 ## `rasacli delstories`
 
@@ -242,7 +244,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/delstories.ts](https://github.com/rgstephens/rasacli/blob/v0.2.0/src/commands/delstories.ts)_
+_See code: [src/commands/delstories.ts](https://github.com/rgstephens/rasacli/blob/v0.3.0/src/commands/delstories.ts)_
 
 ## `rasacli deltemplates`
 
@@ -263,18 +265,15 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/deltemplates.ts](https://github.com/rgstephens/rasacli/blob/v0.2.0/src/commands/deltemplates.ts)_
+_See code: [src/commands/deltemplates.ts](https://github.com/rgstephens/rasacli/blob/v0.3.0/src/commands/deltemplates.ts)_
 
-## `rasacli deltraining [PROJECT]`
+## `rasacli deltraining`
 
 Delete all training data
 
 ```
 USAGE
-  $ rasacli deltraining [PROJECT]
-
-ARGUMENTS
-  PROJECT  [default: default] Project name
+  $ rasacli deltraining
 
 OPTIONS
   -h, --help               show CLI help
@@ -282,12 +281,13 @@ OPTIONS
   -p, --port=port          [default: 80] port
   -v, --verbose            verbose
   --password=password      password
+  --project=project        [default: default] Project name
   --protocol=protocol      [default: http] protocol
   --token=token            token
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/deltraining.ts](https://github.com/rgstephens/rasacli/blob/v0.2.0/src/commands/deltraining.ts)_
+_See code: [src/commands/deltraining.ts](https://github.com/rgstephens/rasacli/blob/v0.3.0/src/commands/deltraining.ts)_
 
 ## `rasacli getdomain`
 
@@ -308,7 +308,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getdomain.ts](https://github.com/rgstephens/rasacli/blob/v0.2.0/src/commands/getdomain.ts)_
+_See code: [src/commands/getdomain.ts](https://github.com/rgstephens/rasacli/blob/v0.3.0/src/commands/getdomain.ts)_
 
 ## `rasacli getentities [PROJECT]`
 
@@ -332,7 +332,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getentities.ts](https://github.com/rgstephens/rasacli/blob/v0.2.0/src/commands/getentities.ts)_
+_See code: [src/commands/getentities.ts](https://github.com/rgstephens/rasacli/blob/v0.3.0/src/commands/getentities.ts)_
 
 ## `rasacli getstories`
 
@@ -353,7 +353,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getstories.ts](https://github.com/rgstephens/rasacli/blob/v0.2.0/src/commands/getstories.ts)_
+_See code: [src/commands/getstories.ts](https://github.com/rgstephens/rasacli/blob/v0.3.0/src/commands/getstories.ts)_
 
 ## `rasacli getstoriesmd`
 
@@ -374,7 +374,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getstoriesmd.ts](https://github.com/rgstephens/rasacli/blob/v0.2.0/src/commands/getstoriesmd.ts)_
+_See code: [src/commands/getstoriesmd.ts](https://github.com/rgstephens/rasacli/blob/v0.3.0/src/commands/getstoriesmd.ts)_
 
 ## `rasacli gettraining [PROJECT]`
 
@@ -398,7 +398,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/gettraining.ts](https://github.com/rgstephens/rasacli/blob/v0.2.0/src/commands/gettraining.ts)_
+_See code: [src/commands/gettraining.ts](https://github.com/rgstephens/rasacli/blob/v0.3.0/src/commands/gettraining.ts)_
 
 ## `rasacli help [COMMAND]`
 
@@ -439,7 +439,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/upddomain.ts](https://github.com/rgstephens/rasacli/blob/v0.2.0/src/commands/upddomain.ts)_
+_See code: [src/commands/upddomain.ts](https://github.com/rgstephens/rasacli/blob/v0.3.0/src/commands/upddomain.ts)_
 
 ## `rasacli updstories FILE`
 
@@ -463,7 +463,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/updstories.ts](https://github.com/rgstephens/rasacli/blob/v0.2.0/src/commands/updstories.ts)_
+_See code: [src/commands/updstories.ts](https://github.com/rgstephens/rasacli/blob/v0.3.0/src/commands/updstories.ts)_
 
 ## `rasacli updtemplates FILE`
 
@@ -487,5 +487,31 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/updtemplates.ts](https://github.com/rgstephens/rasacli/blob/v0.2.0/src/commands/updtemplates.ts)_
+_See code: [src/commands/updtemplates.ts](https://github.com/rgstephens/rasacli/blob/v0.3.0/src/commands/updtemplates.ts)_
+
+## `rasacli updtraining FILE`
+
+Update training
+
+```
+USAGE
+  $ rasacli updtraining FILE
+
+ARGUMENTS
+  FILE  NLU training files (accepts multiple files)
+
+OPTIONS
+  -f, --format=format      [default: md] format (json, md)
+  -h, --help               show CLI help
+  -n, --hostname=hostname  [default: localhost] hostname
+  -p, --port=port          [default: 80] port
+  -v, --verbose            verbose
+  --password=password      password
+  --project=project        [default: default] Project name
+  --protocol=protocol      [default: http] protocol
+  --token=token            token
+  --username=username      [default: me] username
+```
+
+_See code: [src/commands/updtraining.ts](https://github.com/rgstephens/rasacli/blob/v0.3.0/src/commands/updtraining.ts)_
 <!-- commandsstop -->

@@ -240,6 +240,34 @@ export const addTraining = async (conn: Conn, md: string) => {
   }
 };
 
+export const replaceBulkTraining = async (conn: Conn, project: string, fileContent: string, format: string, verbose: boolean) => {
+  try {
+    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/data/";
+
+    let contentType = "text/markdown";
+    if (format == "json") {
+      contentType = "text/json";
+    }
+    if (verbose) {
+      console.log('url:', url);
+      console.log('content length:', fileContent.length);
+      console.log('format:', format);
+      console.log('contentType:', contentType);
+      //console.log('fileContent:', fileContent);
+    }
+    const response = await axios({
+      url: url,
+      method: "PUT",
+      responseType: "json",
+      data: fileContent,
+      headers: { "Content-Type": contentType, "Content-Length": fileContent.length, Authorization: "Bearer " + conn.token }
+    });
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getDomain = async (conn: Conn): Promise<any> => {
   try {
     const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/domain";

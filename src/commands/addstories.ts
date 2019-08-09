@@ -6,7 +6,7 @@ export default class Addstories extends Command {
 
   static flags = {
     help: flags.help({char: 'h'}),
-    verbose: flags.help({char: 'v', description: 'verbose'}),
+    verbose: flags.boolean({char: 'v', description: 'verbose', default: false}),
     hostname: flags.string({char: 'n', description: 'hostname', default: 'localhost', env: 'RASA_HOST'}),
     port: flags.string({char: 'p', description: 'port', default: '80', env: 'RASA_PORT'}),
     protocol: flags.string({description: 'protocol', default: 'http', env: 'RASA_PROTO'}),
