@@ -1,9 +1,8 @@
 import {Command, flags} from '@oclif/command'
-import { login, updDomain, Conn, printFlagsArgs } from '../api'
+import { login, trainModel, Conn, printFlagsArgs } from '../api'
 
-export default class Updtemplates extends Command {
-  static description = 'Update templates'
-  static strict = false
+export default class Train extends Command {
+  static description = 'Train a new model'
 
   static flags = {
     help: flags.help({char: 'h'}),
@@ -16,12 +15,12 @@ export default class Updtemplates extends Command {
     token: flags.string({description: 'token', env: 'RASA_TOKEN'}),
   }
 
-  static args = [{name: 'file', required: true, description: 'Domain yaml file'}]
+  static args = []
 
   conn: Conn = { hostname: '', port: '', protocol: '' };
 
   async run() {
-    const {args, flags} = this.parse(Updtemplates)
+    const {args, flags} = this.parse(Train)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
     if (flags.verbose) {
       printFlagsArgs(flags);
@@ -29,8 +28,10 @@ export default class Updtemplates extends Command {
 
     try {
       await login(this.conn);
-      const resp = await updDomain(this.conn, args.file, true);
-      console.log('Templates updated from', args.file, 'status:', resp.status);
+      var resp = await trainModel(this.conn);
+      if (resp && resp.model) {
+        console.log(resp.model);
+      }
     } catch (error) {
       throw error;
     }

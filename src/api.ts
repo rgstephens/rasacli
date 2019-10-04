@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as fs from "fs";
+import { flags } from '@oclif/command';
 
 export interface Conn {
   hostname: string;
@@ -8,6 +9,14 @@ export interface Conn {
   username?: string;
   password?: string;
   token?: string;
+}
+
+export function printFlagsArgs(flags: any) {
+  console.log('flags.hostname:', flags.hostname, 'RASA_HOST:', process.env.RASA_HOST);
+  console.log('flags.port:', flags.port, 'RASA_PORT:', process.env.RASA_PORT);
+  console.log('flags.username:', flags.username, 'RASA_USER:', process.env.RASA_USER);
+  const pass: string | undefined = process.env.RASA_PASS;
+  console.log('flags.password:', flags.password.substring(0, 1) + '****', 'RASA_PASS:', pass ? pass.substring(0, 1) + '****' : '');
 }
 
 export function parseFilenames(args: string[]) {
@@ -87,6 +96,20 @@ export async function login(conn: Conn) {
     }
   }
 }
+
+export const getVers = async (conn: Conn): Promise<any> => {
+  try {
+    let url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/version";
+    const resp = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
+    console.log('resp.data:', resp.data);
+    //const vers = JSON.parse(resp.data);
+    //url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/status";
+    //const status = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
+    return resp.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const getStories = async (conn: Conn): Promise<any> => {
   try {
@@ -192,6 +215,39 @@ export const getEntities = async (conn: Conn, project: string): Promise<any> => 
     const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
     return response.data;
   } catch (error) {
+    throw error;
+  }
+};
+
+export const trainModel = async (conn: Conn) => {
+  try {
+    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/default/models/jobs";
+
+    const response = await axios({
+      url: url,
+      method: "POST",
+      responseType: "json",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + conn.token }
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const activateModel = async (conn: Conn, modelName: string) => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/default/models/" + modelName + "/tags/production";
+  try {
+    const response = await axios({
+      url: url,
+      method: "PUT",
+      responseType: "json",
+      headers: { "Content-Type": "application/json;charset=utf-8", Authorization: "Bearer " + conn.token }
+    });
+    // response should be a 204
+    return response;
+  } catch (error) {
+    console.error('called endpoint:', url);
     throw error;
   }
 };

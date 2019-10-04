@@ -1,9 +1,8 @@
 import {Command, flags} from '@oclif/command'
-import { login, updDomain, Conn, printFlagsArgs } from '../api'
+import { login, getVers, Conn, printFlagsArgs } from '../api'
 
-export default class Updtemplates extends Command {
-  static description = 'Update templates'
-  static strict = false
+export default class Vers extends Command {
+  static description = 'Show version and status information'
 
   static flags = {
     help: flags.help({char: 'h'}),
@@ -16,12 +15,12 @@ export default class Updtemplates extends Command {
     token: flags.string({description: 'token', env: 'RASA_TOKEN'}),
   }
 
-  static args = [{name: 'file', required: true, description: 'Domain yaml file'}]
+  static args = []
 
   conn: Conn = { hostname: '', port: '', protocol: '' };
 
   async run() {
-    const {args, flags} = this.parse(Updtemplates)
+    const {args, flags} = this.parse(Vers)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
     if (flags.verbose) {
       printFlagsArgs(flags);
@@ -29,8 +28,8 @@ export default class Updtemplates extends Command {
 
     try {
       await login(this.conn);
-      const resp = await updDomain(this.conn, args.file, true);
-      console.log('Templates updated from', args.file, 'status:', resp.status);
+      var vers = await getVers(this.conn);
+      console.log("Rasa X:", vers['rasa-x'], "\nRasa:  ", vers.rasa.production);
     } catch (error) {
       throw error;
     }

@@ -1,6 +1,6 @@
 import { Command, flags } from "@oclif/command";
 import * as fs from "fs";
-import { login, replaceBulkTraining, parseFilenames, Conn } from "../api";
+import { login, replaceBulkTraining, parseFilenames, Conn, printFlagsArgs } from "../api";
 
 export default class Updtraining extends Command {
   static description = "Update training";
@@ -51,7 +51,9 @@ export default class Updtraining extends Command {
       token: flags.token
     };
     const fileList = parseFilenames(process.argv);
-    //console.log('fileList:', fileList);
+    if (flags.verbose) {
+      printFlagsArgs(flags);
+    }
 
     try {
       await login(this.conn);

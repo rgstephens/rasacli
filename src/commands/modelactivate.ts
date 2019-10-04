@@ -1,11 +1,11 @@
 import {Command, flags} from '@oclif/command'
-import { login, updDomain, Conn, printFlagsArgs } from '../api'
+import { login, activateModel, Conn, printFlagsArgs } from '../api'
 
-export default class Updtemplates extends Command {
-  static description = 'Update templates'
-  static strict = false
+export default class Activate extends Command {
+  static description = 'Activate a model'
 
   static flags = {
+    modelname: flags.string({char: 'm', description: 'model name', required: true}),
     help: flags.help({char: 'h'}),
     verbose: flags.boolean({char: 'v', description: 'verbose', default: false}),
     hostname: flags.string({char: 'n', description: 'hostname', default: 'localhost', env: 'RASA_HOST'}),
@@ -16,12 +16,12 @@ export default class Updtemplates extends Command {
     token: flags.string({description: 'token', env: 'RASA_TOKEN'}),
   }
 
-  static args = [{name: 'file', required: true, description: 'Domain yaml file'}]
+  static args = []
 
   conn: Conn = { hostname: '', port: '', protocol: '' };
 
   async run() {
-    const {args, flags} = this.parse(Updtemplates)
+    const {args, flags} = this.parse(Activate)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
     if (flags.verbose) {
       printFlagsArgs(flags);
@@ -29,8 +29,12 @@ export default class Updtemplates extends Command {
 
     try {
       await login(this.conn);
-      const resp = await updDomain(this.conn, args.file, true);
-      console.log('Templates updated from', args.file, 'status:', resp.status);
+      var resp = await activateModel(this.conn, flags.modelname);
+      if (resp.status == 204) {
+        console.log('Model activated');
+      } else {
+        console.log('Unexpected activation response:', resp.status, resp.statusText);
+      }
     } catch (error) {
       throw error;
     }

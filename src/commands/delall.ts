@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import { login, delDomain, getTraining, delTrainingAll, getStories, delStories, Conn } from '../api'
+import { login, delDomain, getTraining, delTrainingAll, getStories, delStories, Conn, printFlagsArgs } from '../api'
 
 export default class Delall extends Command {
   static description = 'Update domain'
@@ -22,6 +22,9 @@ export default class Delall extends Command {
   async run() {
     const {args, flags} = this.parse(Delall)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
+    if (flags.verbose) {
+      printFlagsArgs(flags);
+    }
 
     try {
       await login(this.conn);

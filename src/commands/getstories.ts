@@ -1,5 +1,5 @@
-import {Command, flags} from '@oclif/command'
-import { login, getStories, Conn } from '../api'
+import { Command, flags } from '@oclif/command'
+import { login, getStories, Conn, printFlagsArgs } from '../api'
 
 export default class Getstories extends Command {
   static description = 'Get stories'
@@ -22,10 +22,13 @@ export default class Getstories extends Command {
   async run() {
     const {args, flags} = this.parse(Getstories)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
+    if (flags.verbose) {
+      printFlagsArgs(flags);
+    }
 
     try {
       await login(this.conn);
-      var docs = await getStories(this.conn);
+      const docs = await getStories(this.conn);
       console.log(docs);
     } catch (error) {
       throw error;

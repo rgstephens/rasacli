@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import { login, addStories, Conn, parseFilenames } from '../api'
+import { login, addStories, Conn, parseFilenames, printFlagsArgs } from '../api'
 
 export default class Addstories extends Command {
   static description = 'Add stories'
@@ -33,6 +33,9 @@ export default class Addstories extends Command {
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
     const fileList = parseFilenames(process.argv);
     //console.log('fileList:', fileList);
+    if (flags.verbose) {
+      printFlagsArgs(flags);
+    }
 
     try {
       await login(this.conn);
