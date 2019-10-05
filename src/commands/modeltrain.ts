@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import { login, trainModel, Conn, printFlagsArgs } from '../api'
+import { login, modelTrain, Conn, printFlagsArgs } from '../api'
 
 export default class Train extends Command {
   static description = 'Train a new model'
@@ -28,7 +28,7 @@ export default class Train extends Command {
 
     try {
       await login(this.conn);
-      var resp = await trainModel(this.conn);
+      var resp = await modelTrain(this.conn);
       if (resp && resp.model) {
         console.log(resp.model);
       }

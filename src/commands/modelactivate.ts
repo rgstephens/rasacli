@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import { login, activateModel, Conn, printFlagsArgs } from '../api'
+import { login, modelActivate, Conn, printFlagsArgs } from '../api'
 
 export default class Activate extends Command {
   static description = 'Activate a model'
@@ -29,7 +29,7 @@ export default class Activate extends Command {
 
     try {
       await login(this.conn);
-      var resp = await activateModel(this.conn, flags.modelname);
+      var resp = await modelActivate(this.conn, flags.modelname);
       if (resp.status == 204) {
         console.log('Model activated');
       } else {

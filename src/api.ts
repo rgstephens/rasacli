@@ -16,7 +16,7 @@ export function printFlagsArgs(flags: any) {
   console.log('flags.port:', flags.port, 'RASA_PORT:', process.env.RASA_PORT);
   console.log('flags.username:', flags.username, 'RASA_USER:', process.env.RASA_USER);
   const pass: string | undefined = process.env.RASA_PASS;
-  console.log('flags.password:', flags.password.substring(0, 1) + '****', 'RASA_PASS:', pass ? pass.substring(0, 1) + '****' : '');
+  console.log('flags.password:', flags.password.substring(0, 1) + '****', 'RASA_PASS:', (typeof pass !== 'undefined' && pass.length > 0) ? pass.substring(0, 1) + '****' : '');
 }
 
 export function parseFilenames(args: string[]) {
@@ -40,20 +40,21 @@ export function parseFilenames(args: string[]) {
 }
 
 export async function getChatToken(conn: Conn) {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/chatToken";
   try {
-    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/chatToken";
     console.log("getChatToken Calling: " + url);
     const response = await axios.get(url, { headers: { Authorization: "bearer " + conn.token } });
     console.log(response);
   } catch (error) {
+    console.error("url:", url);
     console.error(error);
     throw error;
   }
 }
 
 async function getToken(conn: Conn) {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/auth";
   try {
-    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/auth";
     //console.log("getToken Calling: " + url);
     const token = await axios.post(url, { username: conn.username, password: conn.password });
     conn.token = token.data.access_token;
@@ -98,35 +99,34 @@ export async function login(conn: Conn) {
 }
 
 export const getVers = async (conn: Conn): Promise<any> => {
+  let url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/version";
   try {
-    let url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/version";
     const resp = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
-    console.log('resp.data:', resp.data);
-    //const vers = JSON.parse(resp.data);
-    //url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/status";
-    //const status = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
     return resp.data;
   } catch (error) {
+    console.error("url:", url);
     throw error;
   }
 };
 
 export const getStories = async (conn: Conn): Promise<any> => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/stories";
   try {
-    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/stories";
     const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
     return response.data;
   } catch (error) {
+    console.error("url:", url);
     throw error;
   }
 };
 
 export const getStoriesMarkdown = async (conn: Conn): Promise<string> => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/stories.md";
   try {
-    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/stories.md";
     const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
     return response.data;
   } catch (error) {
+    console.error("url:", url);
     throw error;
   }
 };
@@ -141,11 +141,12 @@ export async function delStories (conn: Conn, docs: [any]) {
 export async function delStory(conn: Conn, id: number) {
   try {
     //await login(conn);
+    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/stories/" + id;
     try {
-      const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/stories/" + id;
       const response = await axios.delete(url, { headers: { Authorization: "Bearer " + conn.token } });
       return response.data;
     } catch (error) {
+      console.error("url:", url);
       throw error;
     }
   } catch (error) {
@@ -154,9 +155,8 @@ export async function delStory(conn: Conn, id: number) {
 }
 
 export const addStories = async (conn: Conn, md: string) => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/stories";
   try {
-    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/stories";
-
     const mdStream = fs.createReadStream(md);
     mdStream.on("error", console.log);
     const { size } = fs.statSync(md);
@@ -172,15 +172,15 @@ export const addStories = async (conn: Conn, md: string) => {
     });
     return response;
   } catch (error) {
+    console.error("url:", url);
     console.log('error:', error);
     throw error;
   }
 };
 
 export const updStories = async (conn: Conn, md: string) => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/stories";
   try {
-    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/stories";
-
     const mdStream = fs.createReadStream(md);
     mdStream.on("error", console.log);
     const { size } = fs.statSync(md);
@@ -194,35 +194,39 @@ export const updStories = async (conn: Conn, md: string) => {
     });
     return response;
   } catch (error) {
+    console.error("url:", url);
     throw error;
   }
 };
 
 export const getTraining = async (conn: Conn, project: string): Promise<any> => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/data";
   try {
-    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/data";
     //console.log('url:', url);
     const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
     return response.data;
   } catch (error) {
+    console.error("url:", url);
     throw error;
   }
 };
 
 export const getEntities = async (conn: Conn, project: string): Promise<any> => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/entities";
   try {
-    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/entities";
     const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
     return response.data;
   } catch (error) {
+    console.error("url:", url);
+    console.error("error:", error);
+    //console.error("status:", error.status, error.status)
     throw error;
   }
 };
 
-export const trainModel = async (conn: Conn) => {
+export const modelTrain = async (conn: Conn) => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/default/models/jobs";
   try {
-    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/default/models/jobs";
-
     const response = await axios({
       url: url,
       method: "POST",
@@ -231,11 +235,12 @@ export const trainModel = async (conn: Conn) => {
     });
     return response.data;
   } catch (error) {
+    console.error("url:", url);
     throw error;
   }
 };
 
-export const activateModel = async (conn: Conn, modelName: string) => {
+export const modelActivate = async (conn: Conn, modelName: string) => {
   const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/default/models/" + modelName + "/tags/production";
   try {
     const response = await axios({
@@ -247,7 +252,7 @@ export const activateModel = async (conn: Conn, modelName: string) => {
     // response should be a 204
     return response;
   } catch (error) {
-    console.error('called endpoint:', url);
+    console.error("url:", url);
     throw error;
   }
 };
@@ -261,11 +266,12 @@ export async function delTrainingAll (conn: Conn, project: string, docs: [any]) 
 export async function delTraining(conn: Conn, project: string, id: number) {
   try {
     //await login(conn);
+    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/data/" + id;
     try {
-      const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/data/" + id;
       const response = await axios.delete(url, { headers: { Authorization: "Bearer " + conn.token } });
       return response.data;
     } catch (error) {
+      console.error("url:", url);
       throw error;
     }
   } catch (error) {
@@ -274,9 +280,8 @@ export async function delTraining(conn: Conn, project: string, id: number) {
 }
 
 export const addTraining = async (conn: Conn, md: string) => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/stories";
   try {
-    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/stories";
-
     const mdStream = fs.createReadStream(md);
     mdStream.on("error", console.log);
     const { size } = fs.statSync(md);
@@ -292,14 +297,14 @@ export const addTraining = async (conn: Conn, md: string) => {
     });
     return response;
   } catch (error) {
+    console.error("url:", url);
     throw error;
   }
 };
 
 export const replaceBulkTraining = async (conn: Conn, project: string, fileContent: string, format: string, verbose: boolean) => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/data/";
   try {
-    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/data/";
-
     let contentType = "text/markdown";
     if (format == "json") {
       contentType = "text/json";
@@ -320,24 +325,26 @@ export const replaceBulkTraining = async (conn: Conn, project: string, fileConte
     });
     return response;
   } catch (error) {
+    console.error("url:", url);
     throw error;
   }
 };
 
 export const getDomain = async (conn: Conn): Promise<any> => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/domain";
   try {
-    const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/domain";
     //console.log('url:', url);
     const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
     return response.data;
   } catch (error) {
+    console.error("url:", url);
     throw error;
   }
 };
 
 export const updDomain = async (conn: Conn, yaml: string, storeTemplates: boolean) => {
+  let url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/domain";
   try {
-    let url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/domain";
     if (storeTemplates) {
       url += "?store_templates=true";
     }
@@ -356,13 +363,14 @@ export const updDomain = async (conn: Conn, yaml: string, storeTemplates: boolea
     });
     return response;
   } catch (error) {
+    console.error("url:", url);
     throw error;
   }
 };
 
 export const delDomain = async (conn: Conn, storeTemplates: boolean) => {
+  let url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/domain";
   try {
-    let url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/domain";
     //console.log('url:', url);
     if (storeTemplates) {
       url += "?store_templates=true";
@@ -377,6 +385,7 @@ export const delDomain = async (conn: Conn, storeTemplates: boolean) => {
     });
     return response;
   } catch (error) {
+    console.error("url:", url);
     throw error;
   }
 };
