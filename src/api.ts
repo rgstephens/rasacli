@@ -218,7 +218,6 @@ export const getEntities = async (conn: Conn, project: string): Promise<any> => 
     return response.data;
   } catch (error) {
     console.error("url:", url);
-    console.error("error:", error);
     //console.error("status:", error.status, error.status)
     throw error;
   }
@@ -236,6 +235,7 @@ export const modelTrain = async (conn: Conn) => {
     return response.data;
   } catch (error) {
     console.error("url:", url);
+    console.error("error:", error);
     throw error;
   }
 };
