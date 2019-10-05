@@ -235,7 +235,7 @@ export const modelTrain = async (conn: Conn) => {
     return response.data;
   } catch (error) {
     console.error("url:", url);
-    console.error("error:", error);
+    //console.error("error.response:", error.response);
     throw error;
   }
 };

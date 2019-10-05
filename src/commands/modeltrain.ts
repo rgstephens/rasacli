@@ -33,7 +33,11 @@ export default class Train extends Command {
         console.log(resp.model);
       }
     } catch (error) {
-      throw error;
+      const data = error.response.data;
+      console.error(data.message);
+      const text = JSON.parse(data.details.text);
+      console.error(text.message);
+      //throw error;
     }
   }
 }
