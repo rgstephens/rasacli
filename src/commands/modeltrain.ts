@@ -15,7 +15,7 @@ export default class Train extends Command {
     token: flags.string({description: 'token', env: 'RASA_TOKEN'}),
   }
 
-  static args = []
+  static args = [{name: 'project', default: 'default', description: 'Project name'}]
 
   conn: Conn = { hostname: '', port: '', protocol: '' };
 
@@ -28,16 +28,20 @@ export default class Train extends Command {
 
     try {
       await login(this.conn);
-      var resp = await modelTrain(this.conn);
+      var resp = await modelTrain(this.conn, args.project);
       if (resp && resp.model) {
         console.log(resp.model);
       }
     } catch (error) {
-      const data = error.response.data;
-      console.error(data.message);
-      const text = JSON.parse(data.details.text);
-      console.error(text.message);
-      //throw error;
+      if (error.response && error.response.data) {
+        const data = error.response.data;
+        console.error(data.message);
+        const text = JSON.parse(data.details.text);
+        console.error(text.message);
+        process.exit(1);
+      } else {
+        throw error;
+      }
     }
   }
 }

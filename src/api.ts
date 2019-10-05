@@ -199,6 +199,39 @@ export const updStories = async (conn: Conn, md: string) => {
   }
 };
 
+export const getConfig = async (conn: Conn, project: string): Promise<any> => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/settings";
+  try {
+    const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
+    return response.data;
+  } catch (error) {
+    console.error("url:", url);
+    throw error;
+  }
+};
+
+export const updConfig = async (conn: Conn, project: string, yaml: string) => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/settings";
+  try {
+    const fileStream = fs.createReadStream(yaml);
+    fileStream.on("error", console.log);
+    const { size } = fs.statSync(yaml);
+    //console.log("url:", url);
+
+    const response = await axios({
+      url: url,
+      method: "PUT",
+      responseType: "json",
+      data: fs.createReadStream(yaml),
+      headers: { "Content-Type": "text/markdown", "Content-Length": size, Authorization: "Bearer " + conn.token }
+    });
+    return response;
+  } catch (error) {
+    console.error("url:", url);
+    throw error;
+  }
+};
+
 export const getTraining = async (conn: Conn, project: string): Promise<any> => {
   const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/data";
   try {
@@ -223,8 +256,68 @@ export const getEntities = async (conn: Conn, project: string): Promise<any> => 
   }
 };
 
-export const modelTrain = async (conn: Conn) => {
-  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/default/models/jobs";
+export const modelGetList = async (conn: Conn, project: string): Promise<any> => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/models";
+  try {
+    const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
+    return response.data;
+  } catch (error) {
+    console.error("url:", url);
+    //console.error("status:", error.status, error.status)
+    throw error;
+  }
+};
+
+export const modelGetTag = async (conn: Conn, project: string, tag: string): Promise<any> => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/models/tags/" + tag;
+  try {
+    const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
+    return response.data;
+  } catch (error) {
+    console.error("url:", url);
+    //console.error("status:", error.status, error.status)
+    throw error;
+  }
+};
+
+export const modelAddTag = async (conn: Conn, project: string, model: string, tag: string): Promise<any> => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/models" + model + "/tags/" + tag;
+  try {
+    const response = await axios.put(url, { headers: { Authorization: "Bearer " + conn.token } });
+    return response.data;
+  } catch (error) {
+    console.error("url:", url);
+    //console.error("status:", error.status, error.status)
+    throw error;
+  }
+};
+
+export const modelDeleteTag = async (conn: Conn, project: string, model: string, tag: string): Promise<any> => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/models" + model + "/tags/" + tag;
+  try {
+    const response = await axios.delete(url, { headers: { Authorization: "Bearer " + conn.token } });
+    return response.data;
+  } catch (error) {
+    console.error("url:", url);
+    //console.error("status:", error.status, error.status)
+    throw error;
+  }
+};
+
+export const modelDelete = async (conn: Conn, project: string, model: string): Promise<any> => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/models/" + model;
+  try {
+    const response = await axios.delete(url, { headers: { Authorization: "Bearer " + conn.token } });
+    return response.data;
+  } catch (error) {
+    console.error("url:", url);
+    //console.error("status:", error.status, error.status)
+    throw error;
+  }
+};
+
+export const modelTrain = async (conn: Conn, project: string) => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/models/jobs";
   try {
     const response = await axios({
       url: url,
@@ -240,8 +333,8 @@ export const modelTrain = async (conn: Conn) => {
   }
 };
 
-export const modelActivate = async (conn: Conn, modelName: string) => {
-  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/default/models/" + modelName + "/tags/production";
+export const modelActivate = async (conn: Conn, project: string, modelName: string) => {
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/models/" + modelName + "/tags/production";
   try {
     const response = await axios({
       url: url,

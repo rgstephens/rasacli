@@ -1,8 +1,8 @@
 import {Command, flags} from '@oclif/command'
-import { login, modelActivate, Conn, printFlagsArgs } from '../api'
+import { login, modelDelete, Conn, printFlagsArgs } from '../api'
 
-export default class Modelactivate extends Command {
-  static description = 'Activate a model'
+export default class Modeldelete extends Command {
+  static description = 'Delete a model'
 
   static flags = {
     help: flags.help({char: 'h'}),
@@ -23,7 +23,7 @@ export default class Modelactivate extends Command {
   conn: Conn = { hostname: '', port: '', protocol: '' };
 
   async run() {
-    const {args, flags} = this.parse(Modelactivate)
+    const {args, flags} = this.parse(Modeldelete)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
     if (flags.verbose) {
       printFlagsArgs(flags);
@@ -31,7 +31,7 @@ export default class Modelactivate extends Command {
 
     try {
       await login(this.conn);
-      var resp = await modelActivate(this.conn, args.project, args.model);
+      var resp = await modelDelete(this.conn, args.project, args.model);
       if (resp.status == 204) {
         console.log('Model activated');
       } else {

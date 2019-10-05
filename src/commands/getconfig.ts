@@ -1,8 +1,8 @@
 import {Command, flags} from '@oclif/command'
-import { login, modelActivate, Conn, printFlagsArgs } from '../api'
+import { login, getConfig, Conn } from '../api'
 
-export default class Modelactivate extends Command {
-  static description = 'Activate a model'
+export default class Getconfig extends Command {
+  static description = 'Get config'
 
   static flags = {
     help: flags.help({char: 'h'}),
@@ -15,29 +15,18 @@ export default class Modelactivate extends Command {
     token: flags.string({description: 'token', env: 'RASA_TOKEN'}),
   }
 
-  static args = [
-    { name: "project", default: "default", description: "Project name" },
-    { char: 'm', name: 'model', description: 'Model name', required: true }
-  ]
+  static args = [{name: 'project', default: 'default', description: 'Project name'}]
 
   conn: Conn = { hostname: '', port: '', protocol: '' };
 
   async run() {
-    const {args, flags} = this.parse(Modelactivate)
+    const {args, flags} = this.parse(Getconfig)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
-    if (flags.verbose) {
-      printFlagsArgs(flags);
-    }
 
     try {
       await login(this.conn);
-      var resp = await modelActivate(this.conn, args.project, args.model);
-      if (resp.status == 204) {
-        console.log('Model activated');
-      } else {
-        console.log('Unexpected activation response:', resp.status, resp.statusText);
-        process.exit(1);
-      }
+      var docs = await getConfig(this.conn, args.project);
+      console.log(docs);
     } catch (error) {
       throw error;
     }

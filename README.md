@@ -12,6 +12,127 @@ This command line tool has initially been developed to import content from exist
 
 It has been developed in TypeScript with [oclif](https://oclif.io).
 
+## Examples
+
+Importing existing content:
+
+```sh
+export RASA_HOST=mybot.domain.com
+export RASA_PASS=mypass
+export RASA_PORT=8080
+sudo rasacli updtraining data/training/*md
+sudo rasacli addstories data/stories/*md
+sudo rasacli upddomain data/domain.yml
+sudo rasacli updtemplates data/domain.yml
+```
+
+To remove all content:
+
+```sh
+rasacli delall
+```
+
+## Developer Notes
+
+To add a new command to this project (make sure you save the README.md before running):
+
+```
+npx oclif command NAME
+```
+
+To test a commmand:
+
+```
+./bin/run getstories -v
+```
+
+Force update of README.md (make sure you save the README.md before running):
+
+```
+yarn prepack
+```
+
+Publish an updated version of `rasacli`:
+
+```
+npm version (major|minor|patch)
+npm publish
+```
+
+Publish a beta update:
+
+```
+npm version <new version>-beta.0
+npm publish --tag beta
+```
+
+Install beta release:
+
+```
+npm install rasacli@beta.
+```
+
+## Environment Variables
+
+The rasacli will use the following environment variables in lieu of their associated command line options:
+
+| Env        | Option     | Description        |
+| ---------- | ---------- | ------------------ |
+| RASA_HOST  | -n         | Rasa X hostname    |
+| RASA_PORT  | -p         | Rasa X server port |
+| RASA_PROTO | --protocol | Server protocol    |
+| RASA_USER  | --username | Username           |
+| RASA_PASS  | --password | Password           |
+| RASA_TOKEN | --token    | Token              |
+
+<!-- toc -->
+* [rasacli](#rasacli)
+* [Release Notes](#release-notes)
+* [Usage](#usage)
+* [Commands](#commands)
+<!-- tocstop -->
+
+# Release Notes
+
+#### 0.4.5 - Oct 5, 2019
+
+- Fixed `modeltrain` exit code not set
+- Added `addconfig` and `updconfig` for config.yml
+- Added `modelgetlist`
+- Added `modeldelete`
+- Added `modeladdtag`, `modeldeletetag`, `modelgettag`
+- Added `--project` option to `modeltrain`, default value is `default`
+
+#### 0.4.0 - Oct 4, 2019
+
+- Added `vers` to display Rasa & Rasa X version info
+- Added `-v` verbose option
+- Added `modeltrain` to train the model, returns the name of the new model
+- Added `modelactivate` to activate a mode, pass the name of the model with `-m`
+
+#### 0.3.0 - Aug 8, 2019
+
+- Added `updtraining` to replace NLU training data. Accepts a list of markdown files.
+
+#### 0.2.0 - Aug 6, 2019
+
+- Added `updtemplates` to update response templates. This replaces `upddomain -t`
+- Added `getentities` command
+- Added `deltemplates` to replace `deldomain -t` but discovered a bug in this api, see [#4185](https://github.com/RasaHQ/rasa/issues/4185)
+- Added `delall` command which calls all of the delete commands supported by `rasacli`
+
+#### 0.1.3 - Aug 4, 2019
+
+Added `deldomain` command which is the same as an `upddomain` but with an empty dataset (you don't have to supply an empty markdown file). Also fixes an `addstories` file name processing issue.
+
+#### 0.1.2 - Jul 24, 2019
+
+`upddomain` command added `-t` option to specify update of templates. See API domain [PUT](https://rasa.com/docs/rasa-x/api/rasa-x-http-api/#operation/updateDomain) for details on `store_templates` option along with Rasa X API Github issue [#4080](https://github.com/RasaHQ/rasa/issues/4080).
+
+#### 0.1.1 - Jul 23, 2019
+
+Initial set of commands: `addstories`, `delstories`, `deltraining`, `getdomain`, `getstories`, `getstoriesmd`, `gettraining`, `upddomain`
+
 ## Rasa X UI & API
 
 As of the 0.20.0 release of Rasa X, there are limitations on bulk import and delete of content. These limitations prompted the development of _rasacli_. Here's a comparison of the capabilities of the Rasa X UI, API and rasacli:
@@ -118,118 +239,6 @@ The endpoints to retrieve config items:
 |                         | Core | Credentials     |
 |                         | Core | Endpoints       |
 
-## Examples
-
-Importing existing content:
-
-```sh
-export RASA_HOST=mybot.domain.com
-export RASA_PASS=mypass
-export RASA_PORT=8080
-sudo rasacli updtraining data/training/*md
-sudo rasacli addstories data/stories/*md
-sudo rasacli upddomain data/domain.yml
-sudo rasacli updtemplates data/domain.yml
-```
-
-To remove all content:
-
-```sh
-rasacli delall
-```
-
-## Developer Notes
-
-To add a new command to this project (make sure you save the README.md before running):
-
-```
-npx oclif command NAME
-```
-
-To test a commmand:
-
-```
-./bin/run getstories -v
-```
-
-Force update of README.md (make sure you save the README.md before running):
-
-```
-yarn prepack
-```
-
-Publish an updated version of `rasacli`:
-
-```
-npm version (major|minor|patch)
-npm publish
-```
-
-Publish a beta update:
-
-```
-npm version <new version>-beta.0
-npm publish --tag beta
-```
-
-Install beta release:
-
-```
-npm install rasacli@beta.
-```
-
-## Environment Variables
-
-The rasacli will use the following environment variables in lieu of their associated command line options:
-
-| Env        | Option     | Description        |
-| ---------- | ---------- | ------------------ |
-| RASA_HOST  | -n         | Rasa X hostname    |
-| RASA_PORT  | -p         | Rasa X server port |
-| RASA_PROTO | --protocol | Server protocol    |
-| RASA_USER  | --username | Username           |
-| RASA_PASS  | --password | Password           |
-| RASA_TOKEN | --token    | Token              |
-
-<!-- toc -->
-* [rasacli](#rasacli)
-* [Release Notes](#release-notes)
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
-
-# Release Notes
-
-#### 0.4.0 - Oct 4, 2019
-
-- Added `vers` to display Rasa & Rasa X version info
-- Added `-v` verbose option
-- Added `modeltrain` to train the model, returns the name of the new model
-- Added `modelactivate` to activate a mode, pass the name of the model with `-m`
-
-#### 0.3.0 - Aug 8, 2019
-
-- Added `updtraining` to replace NLU training data. Accepts a list of markdown files.
-
-#### 0.2.0 - Aug 6, 2019
-
-- Added `updtemplates` to update response templates. This replaces `upddomain -t`
-- Added `getentities` command
-- Added `deltemplates` to replace `deldomain -t` but discovered a bug in this api, see [#4185](https://github.com/RasaHQ/rasa/issues/4185)
-- Added `delall` command which calls all of the delete commands supported by `rasacli`
-
-#### 0.1.3 - Aug 4, 2019
-
-Added `deldomain` command which is the same as an `upddomain` but with an empty dataset (you don't have to supply an empty markdown file). Also fixes an `addstories` file name processing issue.
-
-#### 0.1.2 - Jul 24, 2019
-
-`upddomain` command added `-t` option to specify update of templates. See API domain [PUT](https://rasa.com/docs/rasa-x/api/rasa-x-http-api/#operation/updateDomain) for details on `store_templates` option along with Rasa X API Github issue [#4080](https://github.com/RasaHQ/rasa/issues/4080).
-
-#### 0.1.1 - Jul 23, 2019
-
-Initial set of commands: `addstories`, `delstories`, `deltraining`, `getdomain`, `getstories`, `getstoriesmd`, `gettraining`, `upddomain`
-
 # Usage
 
 <!-- usage -->
@@ -238,7 +247,7 @@ $ npm install -g rasacli
 $ rasacli COMMAND
 running command...
 $ rasacli (-v|--version|version)
-rasacli/0.4.1-beta.1 darwin-x64 node-v12.9.0
+rasacli/0.4.1 darwin-x64 node-v12.9.0
 $ rasacli --help [COMMAND]
 USAGE
   $ rasacli COMMAND
@@ -255,14 +264,20 @@ USAGE
 * [`rasacli delstories`](#rasacli-delstories)
 * [`rasacli deltemplates`](#rasacli-deltemplates)
 * [`rasacli deltraining`](#rasacli-deltraining)
+* [`rasacli getconfig [PROJECT]`](#rasacli-getconfig-project)
 * [`rasacli getdomain`](#rasacli-getdomain)
 * [`rasacli getentities [PROJECT]`](#rasacli-getentities-project)
 * [`rasacli getstories`](#rasacli-getstories)
 * [`rasacli getstoriesmd`](#rasacli-getstoriesmd)
 * [`rasacli gettraining [PROJECT]`](#rasacli-gettraining-project)
 * [`rasacli help [COMMAND]`](#rasacli-help-command)
-* [`rasacli modelactivate`](#rasacli-modelactivate)
-* [`rasacli modeltrain`](#rasacli-modeltrain)
+* [`rasacli modelactivate [PROJECT] MODEL`](#rasacli-modelactivate-project-model)
+* [`rasacli modeladdtag [PROJECT] TAG MODEL`](#rasacli-modeladdtag-project-tag-model)
+* [`rasacli modeldelete [PROJECT] MODEL`](#rasacli-modeldelete-project-model)
+* [`rasacli modeldeletetag [PROJECT] TAG MODEL`](#rasacli-modeldeletetag-project-tag-model)
+* [`rasacli modelgettag [PROJECT] TAG`](#rasacli-modelgettag-project-tag)
+* [`rasacli modeltrain [PROJECT]`](#rasacli-modeltrain-project)
+* [`rasacli updconfig [PROJECT] FILE`](#rasacli-updconfig-project-file)
 * [`rasacli upddomain FILE`](#rasacli-upddomain-file)
 * [`rasacli updstories FILE`](#rasacli-updstories-file)
 * [`rasacli updtemplates FILE`](#rasacli-updtemplates-file)
@@ -291,7 +306,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/addstories.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/addstories.ts)_
+_See code: [src/commands/addstories.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/addstories.ts)_
 
 ## `rasacli delall [PROJECT]`
 
@@ -315,7 +330,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/delall.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/delall.ts)_
+_See code: [src/commands/delall.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/delall.ts)_
 
 ## `rasacli deldomain`
 
@@ -336,7 +351,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/deldomain.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/deldomain.ts)_
+_See code: [src/commands/deldomain.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/deldomain.ts)_
 
 ## `rasacli delstories`
 
@@ -357,7 +372,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/delstories.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/delstories.ts)_
+_See code: [src/commands/delstories.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/delstories.ts)_
 
 ## `rasacli deltemplates`
 
@@ -378,7 +393,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/deltemplates.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/deltemplates.ts)_
+_See code: [src/commands/deltemplates.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/deltemplates.ts)_
 
 ## `rasacli deltraining`
 
@@ -400,7 +415,31 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/deltraining.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/deltraining.ts)_
+_See code: [src/commands/deltraining.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/deltraining.ts)_
+
+## `rasacli getconfig [PROJECT]`
+
+Get config
+
+```
+USAGE
+  $ rasacli getconfig [PROJECT]
+
+ARGUMENTS
+  PROJECT  [default: default] Project name
+
+OPTIONS
+  -h, --help               show CLI help
+  -n, --hostname=hostname  [default: localhost] hostname
+  -p, --port=port          [default: 80] port
+  -v, --verbose            verbose
+  --password=password      password
+  --protocol=protocol      [default: http] protocol
+  --token=token            token
+  --username=username      [default: me] username
+```
+
+_See code: [src/commands/getconfig.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/getconfig.ts)_
 
 ## `rasacli getdomain`
 
@@ -421,7 +460,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getdomain.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/getdomain.ts)_
+_See code: [src/commands/getdomain.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/getdomain.ts)_
 
 ## `rasacli getentities [PROJECT]`
 
@@ -445,7 +484,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getentities.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/getentities.ts)_
+_See code: [src/commands/getentities.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/getentities.ts)_
 
 ## `rasacli getstories`
 
@@ -466,7 +505,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getstories.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/getstories.ts)_
+_See code: [src/commands/getstories.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/getstories.ts)_
 
 ## `rasacli getstoriesmd`
 
@@ -487,7 +526,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getstoriesmd.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/getstoriesmd.ts)_
+_See code: [src/commands/getstoriesmd.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/getstoriesmd.ts)_
 
 ## `rasacli gettraining [PROJECT]`
 
@@ -511,7 +550,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/gettraining.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/gettraining.ts)_
+_See code: [src/commands/gettraining.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/gettraining.ts)_
 
 ## `rasacli help [COMMAND]`
 
@@ -530,35 +569,17 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.0/src/commands/help.ts)_
 
-## `rasacli modelactivate`
+## `rasacli modelactivate [PROJECT] MODEL`
 
 Activate a model
 
 ```
 USAGE
-  $ rasacli modelactivate
+  $ rasacli modelactivate [PROJECT] MODEL
 
-OPTIONS
-  -h, --help                 show CLI help
-  -m, --modelname=modelname  (required) model name
-  -n, --hostname=hostname    [default: localhost] hostname
-  -p, --port=port            [default: 80] port
-  -v, --verbose              verbose
-  --password=password        password
-  --protocol=protocol        [default: http] protocol
-  --token=token              token
-  --username=username        [default: me] username
-```
-
-_See code: [src/commands/modelactivate.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/modelactivate.ts)_
-
-## `rasacli modeltrain`
-
-Train a new model
-
-```
-USAGE
-  $ rasacli modeltrain
+ARGUMENTS
+  PROJECT  [default: default] Project name
+  MODEL    Model name
 
 OPTIONS
   -h, --help               show CLI help
@@ -571,7 +592,158 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/modeltrain.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/modeltrain.ts)_
+_See code: [src/commands/modelactivate.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/modelactivate.ts)_
+
+## `rasacli modeladdtag [PROJECT] TAG MODEL`
+
+Add tag to model
+
+```
+USAGE
+  $ rasacli modeladdtag [PROJECT] TAG MODEL
+
+ARGUMENTS
+  PROJECT  [default: default] Project name
+  TAG      Tag
+  MODEL    Model name
+
+OPTIONS
+  -h, --help               show CLI help
+  -n, --hostname=hostname  [default: localhost] hostname
+  -p, --port=port          [default: 80] port
+  -v, --verbose            verbose
+  --password=password      password
+  --protocol=protocol      [default: http] protocol
+  --token=token            token
+  --username=username      [default: me] username
+```
+
+_See code: [src/commands/modeladdtag.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/modeladdtag.ts)_
+
+## `rasacli modeldelete [PROJECT] MODEL`
+
+Delete a model
+
+```
+USAGE
+  $ rasacli modeldelete [PROJECT] MODEL
+
+ARGUMENTS
+  PROJECT  [default: default] Project name
+  MODEL    Model name
+
+OPTIONS
+  -h, --help               show CLI help
+  -n, --hostname=hostname  [default: localhost] hostname
+  -p, --port=port          [default: 80] port
+  -v, --verbose            verbose
+  --password=password      password
+  --protocol=protocol      [default: http] protocol
+  --token=token            token
+  --username=username      [default: me] username
+```
+
+_See code: [src/commands/modeldelete.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/modeldelete.ts)_
+
+## `rasacli modeldeletetag [PROJECT] TAG MODEL`
+
+Delete tag from model
+
+```
+USAGE
+  $ rasacli modeldeletetag [PROJECT] TAG MODEL
+
+ARGUMENTS
+  PROJECT  [default: default] Project name
+  TAG      Tag
+  MODEL    Model name
+
+OPTIONS
+  -h, --help               show CLI help
+  -n, --hostname=hostname  [default: localhost] hostname
+  -p, --port=port          [default: 80] port
+  -v, --verbose            verbose
+  --password=password      password
+  --protocol=protocol      [default: http] protocol
+  --token=token            token
+  --username=username      [default: me] username
+```
+
+_See code: [src/commands/modeldeletetag.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/modeldeletetag.ts)_
+
+## `rasacli modelgettag [PROJECT] TAG`
+
+Get model with tag
+
+```
+USAGE
+  $ rasacli modelgettag [PROJECT] TAG
+
+ARGUMENTS
+  PROJECT  [default: default] Project name
+  TAG      Tag
+
+OPTIONS
+  -h, --help               show CLI help
+  -n, --hostname=hostname  [default: localhost] hostname
+  -p, --port=port          [default: 80] port
+  -v, --verbose            verbose
+  --password=password      password
+  --protocol=protocol      [default: http] protocol
+  --token=token            token
+  --username=username      [default: me] username
+```
+
+_See code: [src/commands/modelgettag.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/modelgettag.ts)_
+
+## `rasacli modeltrain [PROJECT]`
+
+Train a new model
+
+```
+USAGE
+  $ rasacli modeltrain [PROJECT]
+
+ARGUMENTS
+  PROJECT  [default: default] Project name
+
+OPTIONS
+  -h, --help               show CLI help
+  -n, --hostname=hostname  [default: localhost] hostname
+  -p, --port=port          [default: 80] port
+  -v, --verbose            verbose
+  --password=password      password
+  --protocol=protocol      [default: http] protocol
+  --token=token            token
+  --username=username      [default: me] username
+```
+
+_See code: [src/commands/modeltrain.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/modeltrain.ts)_
+
+## `rasacli updconfig [PROJECT] FILE`
+
+Update config
+
+```
+USAGE
+  $ rasacli updconfig [PROJECT] FILE
+
+ARGUMENTS
+  PROJECT  [default: default] Project name
+  FILE     Domain yaml file
+
+OPTIONS
+  -h, --help               show CLI help
+  -n, --hostname=hostname  [default: localhost] hostname
+  -p, --port=port          [default: 80] port
+  -v, --verbose            verbose
+  --password=password      password
+  --protocol=protocol      [default: http] protocol
+  --token=token            token
+  --username=username      [default: me] username
+```
+
+_See code: [src/commands/updconfig.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/updconfig.ts)_
 
 ## `rasacli upddomain FILE`
 
@@ -595,7 +767,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/upddomain.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/upddomain.ts)_
+_See code: [src/commands/upddomain.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/upddomain.ts)_
 
 ## `rasacli updstories FILE`
 
@@ -619,7 +791,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/updstories.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/updstories.ts)_
+_See code: [src/commands/updstories.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/updstories.ts)_
 
 ## `rasacli updtemplates FILE`
 
@@ -643,7 +815,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/updtemplates.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/updtemplates.ts)_
+_See code: [src/commands/updtemplates.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/updtemplates.ts)_
 
 ## `rasacli updtraining FILE`
 
@@ -669,7 +841,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/updtraining.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/updtraining.ts)_
+_See code: [src/commands/updtraining.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/updtraining.ts)_
 
 ## `rasacli vers`
 
@@ -690,5 +862,5 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/vers.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1-beta.1/src/commands/vers.ts)_
+_See code: [src/commands/vers.ts](https://github.com/rgstephens/rasacli/blob/v0.4.1/src/commands/vers.ts)_
 <!-- commandsstop -->

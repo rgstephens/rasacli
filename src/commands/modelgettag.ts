@@ -1,8 +1,8 @@
 import {Command, flags} from '@oclif/command'
-import { login, modelActivate, Conn, printFlagsArgs } from '../api'
+import { login, modelGetTag, Conn } from '../api'
 
-export default class Modelactivate extends Command {
-  static description = 'Activate a model'
+export default class Modelgettag extends Command {
+  static description = 'Get model with tag'
 
   static flags = {
     help: flags.help({char: 'h'}),
@@ -16,28 +16,20 @@ export default class Modelactivate extends Command {
   }
 
   static args = [
-    { name: "project", default: "default", description: "Project name" },
-    { char: 'm', name: 'model', description: 'Model name', required: true }
+    {name: 'project', default: 'default', description: 'Project name'}, 
+    {name: 'tag', description: 'Tag', required: true}
   ]
 
   conn: Conn = { hostname: '', port: '', protocol: '' };
 
   async run() {
-    const {args, flags} = this.parse(Modelactivate)
+    const {args, flags} = this.parse(Modelgettag)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
-    if (flags.verbose) {
-      printFlagsArgs(flags);
-    }
 
     try {
       await login(this.conn);
-      var resp = await modelActivate(this.conn, args.project, args.model);
-      if (resp.status == 204) {
-        console.log('Model activated');
-      } else {
-        console.log('Unexpected activation response:', resp.status, resp.statusText);
-        process.exit(1);
-      }
+      var docs = await modelGetTag(this.conn, args.project, args.tag);
+      console.log(docs);
     } catch (error) {
       throw error;
     }
