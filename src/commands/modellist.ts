@@ -1,7 +1,18 @@
 import {Command, flags} from '@oclif/command'
-import { login, modelActivate, Conn, printFlagsArgs } from '../api'
+import { login, modelGetList, printFlagsArgs, Conn } from '../api'
 
-export default class Modelactivate extends Command {
+interface modelType {
+  hash: string;
+  model: string;
+  path: string;
+  project: string;
+  trained_at: Date;
+  version: string;
+  tags: [string];
+  is_compatible: boolean;
+}
+
+export default class Modellist extends Command {
   static description = 'Activate a model'
 
   static flags = {
@@ -13,7 +24,6 @@ export default class Modelactivate extends Command {
     username: flags.string({description: 'username', default: 'me', env: 'RASA_USER'}),
     password: flags.string({description: 'password', env: 'RASA_PASS'}),
     token: flags.string({description: 'token', env: 'RASA_TOKEN'}),
-    model: flags.string({ char: 'm', description: 'model', required: true }),
     project: flags.string({ description: 'Project name', default: 'default' })
   }
 
@@ -22,7 +32,7 @@ export default class Modelactivate extends Command {
   conn: Conn = { hostname: '', port: '', protocol: '' };
 
   async run() {
-    const {args, flags} = this.parse(Modelactivate)
+    const {args, flags} = this.parse(Modellist)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
     if (flags.verbose) {
       printFlagsArgs(flags);
@@ -30,16 +40,14 @@ export default class Modelactivate extends Command {
 
     try {
       await login(this.conn);
-      var resp = await modelActivate(this.conn, flags.project, flags.model);
-      if (resp.status == 204) {
-        console.log('Model activated');
-      } else if (resp.status == 401) {
-        console.log('Not logged in');
-        process.exit(1);
-      } else {
-        console.log('Unexpected activation response:', resp.status, resp.statusText);
-        process.exit(1);
-      }
+      var resp = await modelGetList(this.conn, flags.project);
+      resp.forEach((m: modelType) => {
+        if (flags.project != 'default') {
+          console.log(m.model, m.tags[0] ? m.tags[0] : '');
+        } else {
+            console.log(m.model, m.project, m.tags[0] ? m.tags[0] : '');
+        }
+      });
     } catch (error) {
       throw error;
     }

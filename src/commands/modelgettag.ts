@@ -1,8 +1,8 @@
 import {Command, flags} from '@oclif/command'
-import { login, modelGetTag, Conn } from '../api'
+import { login, modelGetTag, printFlagsArgs, Conn } from '../api'
 
 export default class Modelgettag extends Command {
-  static description = 'Get model with tag'
+  static description = 'Get model with tag, downloads zipped model'
 
   static flags = {
     help: flags.help({char: 'h'}),
@@ -13,22 +13,24 @@ export default class Modelgettag extends Command {
     username: flags.string({description: 'username', default: 'me', env: 'RASA_USER'}),
     password: flags.string({description: 'password', env: 'RASA_PASS'}),
     token: flags.string({description: 'token', env: 'RASA_TOKEN'}),
+    tag: flags.string({ char: 't', description: 'tag', required: true }),
+    project: flags.string({ description: 'Project name', default: 'default' }),
   }
 
-  static args = [
-    {name: 'project', default: 'default', description: 'Project name'}, 
-    {name: 'tag', description: 'Tag', required: true}
-  ]
+  static args = []
 
   conn: Conn = { hostname: '', port: '', protocol: '' };
 
   async run() {
     const {args, flags} = this.parse(Modelgettag)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
-
+    if (flags.verbose) {
+      printFlagsArgs(flags);
+    }
+  
     try {
       await login(this.conn);
-      var docs = await modelGetTag(this.conn, args.project, args.tag);
+      var docs = await modelGetTag(this.conn, flags.project, flags.tag);
       console.log(docs);
     } catch (error) {
       throw error;

@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import { login, getTraining, Conn } from '../api'
+import { login, getTraining, printFlagsArgs, Conn } from '../api'
 
 export default class Gettraining extends Command {
   static description = 'Get training data'
@@ -13,19 +13,23 @@ export default class Gettraining extends Command {
     username: flags.string({description: 'username', default: 'me', env: 'RASA_USER'}),
     password: flags.string({description: 'password', env: 'RASA_PASS'}),
     token: flags.string({description: 'token', env: 'RASA_TOKEN'}),
+    project: flags.string({ description: 'Project name', default: 'default' })
   }
 
-  static args = [{name: 'project', default: 'default', description: 'Project name'}]
+  static args = [];
 
   conn: Conn = { hostname: '', port: '', protocol: '' };
 
   async run() {
     const {args, flags} = this.parse(Gettraining)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
+    if (flags.verbose) {
+      printFlagsArgs(flags);
+    }
 
     try {
       await login(this.conn);
-      var docs = await getTraining(this.conn, args.project);
+      var docs = await getTraining(this.conn, flags.project);
       console.log(docs);
     } catch (error) {
       throw error;

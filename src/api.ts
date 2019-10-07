@@ -11,12 +11,32 @@ export interface Conn {
   token?: string;
 }
 
+// AxiosResponse
 export function printFlagsArgs(flags: any) {
   console.log('flags.hostname:', flags.hostname, 'RASA_HOST:', process.env.RASA_HOST);
   console.log('flags.port:', flags.port, 'RASA_PORT:', process.env.RASA_PORT);
   console.log('flags.username:', flags.username, 'RASA_USER:', process.env.RASA_USER);
   const pass: string | undefined = process.env.RASA_PASS;
   console.log('flags.password:', flags.password.substring(0, 1) + '****', 'RASA_PASS:', (typeof pass !== 'undefined' && pass.length > 0) ? pass.substring(0, 1) + '****' : '');
+}
+
+export function httpStatusCheck(resp: any) {
+  //console.log('httpStatusCheck:', resp);
+  if (resp && resp.status) {
+    switch (resp.status) {
+      case 400:
+        console.log(resp.status, resp.statusText);
+        if (resp.data) {
+          console.log(resp.data);
+        }
+        process.exit(1);
+        break;
+      case 401:
+       console.log('Not logged in or not authorized');
+      process.exit(1);
+      break;
+    }
+  }
 }
 
 export function parseFilenames(args: string[]) {
@@ -46,6 +66,7 @@ export async function getChatToken(conn: Conn) {
     const response = await axios.get(url, { headers: { Authorization: "bearer " + conn.token } });
     console.log(response);
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     console.error(error);
     throw error;
@@ -60,6 +81,7 @@ async function getToken(conn: Conn) {
     conn.token = token.data.access_token;
     return conn.token;
   } catch (error) {
+    httpStatusCheck(error.response);
     //console.error("getToken", error);
     throw error;
   }
@@ -104,6 +126,7 @@ export const getVers = async (conn: Conn): Promise<any> => {
     const resp = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
     return resp.data;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     throw error;
   }
@@ -115,6 +138,7 @@ export const getStories = async (conn: Conn): Promise<any> => {
     const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
     return response.data;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     throw error;
   }
@@ -126,6 +150,7 @@ export const getStoriesMarkdown = async (conn: Conn): Promise<string> => {
     const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
     return response.data;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     throw error;
   }
@@ -146,6 +171,7 @@ export async function delStory(conn: Conn, id: number) {
       const response = await axios.delete(url, { headers: { Authorization: "Bearer " + conn.token } });
       return response.data;
     } catch (error) {
+    httpStatusCheck(error.response);
       console.error("url:", url);
       throw error;
     }
@@ -172,6 +198,7 @@ export const addStories = async (conn: Conn, md: string) => {
     });
     return response;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     console.log('error:', error);
     throw error;
@@ -194,6 +221,7 @@ export const updStories = async (conn: Conn, md: string) => {
     });
     return response;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     throw error;
   }
@@ -205,6 +233,7 @@ export const getConfig = async (conn: Conn, project: string): Promise<any> => {
     const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
     return response.data;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     throw error;
   }
@@ -223,10 +252,11 @@ export const updConfig = async (conn: Conn, project: string, yaml: string) => {
       method: "PUT",
       responseType: "json",
       data: fs.createReadStream(yaml),
-      headers: { "Content-Type": "text/markdown", "Content-Length": size, Authorization: "Bearer " + conn.token }
+      headers: { "Content-Type": "text/plain", "Content-Length": size, Authorization: "Bearer " + conn.token }
     });
     return response;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     throw error;
   }
@@ -239,6 +269,7 @@ export const getTraining = async (conn: Conn, project: string): Promise<any> => 
     const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
     return response.data;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     throw error;
   }
@@ -250,6 +281,7 @@ export const getEntities = async (conn: Conn, project: string): Promise<any> => 
     const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
     return response.data;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     //console.error("status:", error.status, error.status)
     throw error;
@@ -260,9 +292,11 @@ export const modelGetList = async (conn: Conn, project: string): Promise<any> =>
   const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/models";
   try {
     const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
+    //console.log(response);
     return response.data;
   } catch (error) {
     console.error("url:", url);
+    httpStatusCheck(error.response);
     //console.error("status:", error.status, error.status)
     throw error;
   }
@@ -274,6 +308,7 @@ export const modelGetTag = async (conn: Conn, project: string, tag: string): Pro
     const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
     return response.data;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     //console.error("status:", error.status, error.status)
     throw error;
@@ -281,11 +316,13 @@ export const modelGetTag = async (conn: Conn, project: string, tag: string): Pro
 };
 
 export const modelAddTag = async (conn: Conn, project: string, model: string, tag: string): Promise<any> => {
-  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/models" + model + "/tags/" + tag;
+  console.log(conn);
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/models/" + model + "/tags/" + tag;
   try {
     const response = await axios.put(url, { headers: { Authorization: "Bearer " + conn.token } });
     return response.data;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     //console.error("status:", error.status, error.status)
     throw error;
@@ -293,11 +330,12 @@ export const modelAddTag = async (conn: Conn, project: string, model: string, ta
 };
 
 export const modelDeleteTag = async (conn: Conn, project: string, model: string, tag: string): Promise<any> => {
-  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/models" + model + "/tags/" + tag;
+  const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/models/" + model + "/tags/" + tag;
   try {
     const response = await axios.delete(url, { headers: { Authorization: "Bearer " + conn.token } });
     return response.data;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     //console.error("status:", error.status, error.status)
     throw error;
@@ -310,9 +348,8 @@ export const modelDelete = async (conn: Conn, project: string, model: string): P
     const response = await axios.delete(url, { headers: { Authorization: "Bearer " + conn.token } });
     return response.data;
   } catch (error) {
-    console.error("url:", url);
-    //console.error("status:", error.status, error.status)
-    throw error;
+    httpStatusCheck(error.response);
+      throw error;
   }
 };
 
@@ -327,6 +364,7 @@ export const modelTrain = async (conn: Conn, project: string) => {
     });
     return response.data;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     //console.error("error.response:", error.response);
     throw error;
@@ -345,6 +383,7 @@ export const modelActivate = async (conn: Conn, project: string, modelName: stri
     // response should be a 204
     return response;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     throw error;
   }
@@ -364,6 +403,7 @@ export async function delTraining(conn: Conn, project: string, id: number) {
       const response = await axios.delete(url, { headers: { Authorization: "Bearer " + conn.token } });
       return response.data;
     } catch (error) {
+    httpStatusCheck(error.response);
       console.error("url:", url);
       throw error;
     }
@@ -390,6 +430,7 @@ export const addTraining = async (conn: Conn, md: string) => {
     });
     return response;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     throw error;
   }
@@ -418,6 +459,7 @@ export const replaceBulkTraining = async (conn: Conn, project: string, fileConte
     });
     return response;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     throw error;
   }
@@ -430,6 +472,7 @@ export const getDomain = async (conn: Conn): Promise<any> => {
     const response = await axios.get(url, { headers: { Authorization: "Bearer " + conn.token } });
     return response.data;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     throw error;
   }
@@ -456,6 +499,7 @@ export const updDomain = async (conn: Conn, yaml: string, storeTemplates: boolea
     });
     return response;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     throw error;
   }
@@ -478,6 +522,7 @@ export const delDomain = async (conn: Conn, storeTemplates: boolean) => {
     });
     return response;
   } catch (error) {
+    httpStatusCheck(error.response);
     console.error("url:", url);
     throw error;
   }

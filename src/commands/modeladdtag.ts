@@ -1,27 +1,26 @@
 import { Command, flags } from "@oclif/command";
-import { login, modelAddTag, Conn } from "../api";
+import { login, modelAddTag, printFlagsArgs, Conn } from "../api";
 
 export default class Modeladdtag extends Command {
-  static description = "Add tag to model";
+  static description = "Add tag to model, enterprise vesion only";
 
   static flags = {
-    help: flags.help({ char: "h" }),
-    verbose: flags.boolean({ char: "v", description: "verbose", default: false }),
-    hostname: flags.string({ char: "n", description: "hostname", default: "localhost", env: "RASA_HOST" }),
-    port: flags.string({ char: "p", description: "port", default: "80", env: "RASA_PORT" }),
-    protocol: flags.string({ description: "protocol", default: "http", env: "RASA_PROTO" }),
-    username: flags.string({ description: "username", default: "me", env: "RASA_USER" }),
-    password: flags.string({ description: "password", env: "RASA_PASS" }),
-    token: flags.string({ description: "token", env: "RASA_TOKEN" })
+    help: flags.help({ char: 'h' }),
+    verbose: flags.boolean({ char: 'v', description: 'verbose', default: false }),
+    hostname: flags.string({ char: 'n', description: 'hostname', default: 'localhost', env: 'RASA_HOST' }),
+    port: flags.string({ char: 'p', description: 'port', default: '80', env: 'RASA_PORT' }),
+    protocol: flags.string({ description: 'protocol', default: 'http', env: 'RASA_PROTO' }),
+    username: flags.string({ description: 'username', default: 'me', env: 'RASA_USER' }),
+    password: flags.string({ description: 'password', env: 'RASA_PASS' }),
+    token: flags.string({ description: 'token', env: 'RASA_TOKEN' }),
+    model: flags.string({ char: 'm', description: 'model', required: true }),
+    tag: flags.string({ char: 't', description: 'tag', required: true }),
+    project: flags.string({ description: 'Project name', default: 'default' }),
   };
 
-  static args = [
-    { name: "project", default: "default", description: "Project name" },
-    { name: "tag", description: "Tag", required: true },
-    { char: "m", name: "model", description: "Model name", required: true }
-  ];
+  static args = [];
 
-  conn: Conn = { hostname: "", port: "", protocol: "" };
+  conn: Conn = { hostname: '', port: '', protocol: '' };
 
   async run() {
     const { args, flags } = this.parse(Modeladdtag);
@@ -33,10 +32,13 @@ export default class Modeladdtag extends Command {
       password: flags.password,
       token: flags.token
     };
-
+    if (flags.verbose) {
+      printFlagsArgs(flags);
+    }
+  
     try {
       await login(this.conn);
-      var docs = await modelAddTag(this.conn, args.project, args.model, args.tag);
+      var docs = await modelAddTag(this.conn, flags.project, flags.model, flags.tag);
       console.log(docs);
     } catch (error) {
       throw error;

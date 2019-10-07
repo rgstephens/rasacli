@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import { getTraining, delTrainingAll, login, Conn } from '../api'
+import { getTraining, delTrainingAll, printFlagsArgs, login, Conn } from '../api'
 
 export default class Deltraining extends Command {
   conn: Conn = { hostname: '', port: '', protocol: '' };
@@ -23,13 +23,16 @@ export default class Deltraining extends Command {
   async run() {
     const {args, flags} = this.parse(Deltraining)
     this.conn = { hostname: flags.hostname, port: flags.port, protocol: flags.protocol, username: flags.username, password: flags.password, token: flags.token };
+    if (flags.verbose) {
+      printFlagsArgs(flags);
+    }
 
     try {
       await login(this.conn);
       var docs = await getTraining(this.conn, flags.project);
       console.log("Deleting", docs.length, "training");
       //console.log(docs)
-      const status: any = await delTrainingAll(this.conn, args.project, docs)
+      const status: any = await delTrainingAll(this.conn, flags.project, docs)
     } catch (error) {
       throw error;
     }

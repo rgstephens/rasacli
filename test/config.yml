@@ -1,0 +1,12 @@
+pipeline: supervised_embeddings
+language: en
+policies:
+- name: MemoizationPolicy
+  max_history: 1
+- name: KerasPolicy
+  epochs: 200
+  max_history: 1
+- name: MappingPolicy
+- name: FallbackPolicy
+  nlu_threshold: 0.59
+- name: FormPolicy

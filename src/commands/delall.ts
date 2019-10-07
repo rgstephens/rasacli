@@ -13,9 +13,10 @@ export default class Delall extends Command {
     username: flags.string({description: 'username', default: 'me', env: 'RASA_USER'}),
     password: flags.string({description: 'password', env: 'RASA_PASS'}),
     token: flags.string({description: 'token', env: 'RASA_TOKEN'}),
+    project: flags.string({ description: 'Project name', default: 'default' })
   }
 
-  static args = [{name: 'project', default: 'default', description: 'Project name'}]
+  static args = [];
 
   conn: Conn = { hostname: '', port: '', protocol: '' };
 
@@ -35,10 +36,10 @@ export default class Delall extends Command {
       resp = await delDomain(this.conn, true);
       console.log('Removed templates, status:', resp.status);
       // Delete NLU training data
-      let docs = await getTraining(this.conn, args.project);
+      let docs = await getTraining(this.conn, flags.project);
       console.log("Deleting", docs.length, "training");
       //console.log(docs)
-      let status: any = await delTrainingAll(this.conn, args.project, docs)
+      let status: any = await delTrainingAll(this.conn, flags.project, docs)
       // Delete stories
       docs = await getStories(this.conn);
       console.log("Deleting", docs.length, "stories");

@@ -28,6 +28,7 @@ export default class Upddomain extends Command {
       await login(this.conn);
       const resp = await updDomain(this.conn, args.file, false);
       console.log('Domain updated from', args.file, 'status:', resp.status);
+      
     } catch (error) {
       throw error;
     }
