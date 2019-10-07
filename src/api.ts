@@ -17,7 +17,7 @@ export function printFlagsArgs(flags: any) {
   console.log('flags.port:', flags.port, 'RASA_PORT:', process.env.RASA_PORT);
   console.log('flags.username:', flags.username, 'RASA_USER:', process.env.RASA_USER);
   const pass: string | undefined = process.env.RASA_PASS;
-  console.log('flags.password:', flags.password.substring(0, 1) + '****', 'RASA_PASS:', (typeof pass !== 'undefined' && pass.length > 0) ? pass.substring(0, 1) + '****' : '');
+  console.log('flags.password:', flags.password && flags.password.substring(0, 1) + '****', 'RASA_PASS:', (typeof pass !== 'undefined' && pass.length > 0) ? pass.substring(0, 1) + '****' : '');
 }
 
 export function httpStatusCheck(resp: any) {
@@ -242,17 +242,17 @@ export const getConfig = async (conn: Conn, project: string): Promise<any> => {
 export const updConfig = async (conn: Conn, project: string, yaml: string) => {
   const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/settings";
   try {
-    const fileStream = fs.createReadStream(yaml);
-    fileStream.on("error", console.log);
-    const { size } = fs.statSync(yaml);
-    //console.log("url:", url);
+    const configYaml = fs.readFileSync(yaml, 'utf8');
+    const configYamlJSON = '{ "config": "' + configYaml + '" }';
+    const size = configYamlJSON.length;
+    //console.log('configYamlJSON:', configYamlJSON);
 
     const response = await axios({
       url: url,
       method: "PUT",
       responseType: "json",
-      data: fs.createReadStream(yaml),
-      headers: { "Content-Type": "text/plain", "Content-Length": size, Authorization: "Bearer " + conn.token }
+      data: configYamlJSON,
+      headers: { "Content-Type": "application/json;charset=UTF-8", "Content-Length": size, Authorization: "Bearer " + conn.token }
     });
     return response;
   } catch (error) {

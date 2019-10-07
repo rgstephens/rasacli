@@ -1,0 +1,3 @@
+{
+    "config": "pipeline: supervised_embeddings\nlanguage: en\npolicies:\n- name: MemoizationPolicy\n  max_history: 1\n- name: KerasPolicy\n  epochs: 200\n  max_history: 1\n- name: MappingPolicy\n- name: FallbackPolicy\n  nlu_threshold: 0.59\n- name: FormPolicy\n"
+}
