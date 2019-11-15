@@ -243,7 +243,7 @@ export const updConfig = async (conn: Conn, project: string, yaml: string) => {
   const url = conn.protocol + "://" + conn.hostname + ":" + conn.port + "/api/projects/" + project + "/settings";
   try {
     const configYaml = fs.readFileSync(yaml, 'utf8');
-    const configYamlJSON = '{ "config": "' + configYaml + '" }';
+    const configYamlJSON = '{ "config": "' + configYaml.replace(/\"/g, "\\\"") + '" }';
     const size = configYamlJSON.length;
     //console.log('configYamlJSON:', configYamlJSON);
 
@@ -432,6 +432,9 @@ export const addTraining = async (conn: Conn, md: string) => {
   } catch (error) {
     httpStatusCheck(error.response);
     console.error("url:", url);
+    if (error.response.status == 500) {
+      console.log("Internal server error, importing", md);
+    }
     throw error;
   }
 };

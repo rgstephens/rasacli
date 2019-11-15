@@ -14,23 +14,55 @@ It has been developed in TypeScript with [oclif](https://oclif.io).
 ## Table of Contents
 
 <!-- toc -->
-* [rasacli](#rasacli)
-* [Examples](#examples)
-* [Environment Variables](#environment-variables)
-* [Release Notes](#release-notes)
-* [Developer Notes](#developer-notes)
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
+
+- [rasacli](#rasacli)
+- [Installation](#install)
+- [Examples](#examples)
+- [Environment Variables](#environment-variables)
+- [Release Notes](#release-notes)
+- [Developer Notes](#developer-notes)
+- [Usage](#usage)
+- [Commands](#commands)
+  <!-- tocstop -->
+
+# Installation
+
+To install:
+
+```
+npm install -g rasacli
+```
+
+If you don't have `node` and `npm` installed, run these commands to install on Debian-based systems:
+
+```
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+source ~/.profile
+nvm install 12
+node --version
+npm install -g rasacli
+rasacli --version
+```
 
 # Examples
 
-Importing existing content:
+Set environment variables:
+
+```
+export RASA_HOST=mybot.domain.com
+export RASA_USER=me
+export RASA_PASS=mypass
+```
+
+| Command           | Details                |
+| ----------------- | ---------------------- |
+| rasacli --help    | Command options list   |
+| rasacli modellist | List models            |
+| rasacli delall    | Delete all bot content |
+
+Importing content:
 
 ```sh
-export RASA_HOST=mybot.domain.com
-export RASA_PASS=mypass
-export RASA_PORT=8080
 rasacli updtraining data/training/*md
 rasacli addstories data/stories/*md
 rasacli upddomain data/domain.yml
@@ -38,10 +70,13 @@ rasacli updtemplates data/domain.yml
 rasacli updconfig data/config.yml
 ```
 
-To remove all content:
+Export existing content:
 
-```sh
-rasacli delall
+```
+rasacli getdomain > domain.yaml
+rasacli getstories > stories.json
+rasacli getstoriesmd > stories.md
+rasacli gettraining > nlu.json
 ```
 
 Train, list and activate model:
@@ -152,54 +187,73 @@ npm publish --tag beta
 Install beta release:
 
 ```
-npm install rasacli@beta.
+npm install -g rasacli@beta.
 ```
 
 # Usage
 
 <!-- usage -->
+
 ```sh-session
 $ npm install -g rasacli
 $ rasacli COMMAND
 running command...
 $ rasacli (-v|--version|version)
-rasacli/0.4.6 darwin-x64 node-v12.9.0
+rasacli/0.4.7 darwin-x64 node-v12.9.0
 $ rasacli --help [COMMAND]
 USAGE
   $ rasacli COMMAND
 ...
 ```
+
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-* [`rasacli addstories FILE`](#rasacli-addstories-file)
-* [`rasacli delall`](#rasacli-delall)
-* [`rasacli deldomain`](#rasacli-deldomain)
-* [`rasacli delstories`](#rasacli-delstories)
-* [`rasacli deltemplates`](#rasacli-deltemplates)
-* [`rasacli deltraining`](#rasacli-deltraining)
-* [`rasacli getconfig`](#rasacli-getconfig)
-* [`rasacli getdomain`](#rasacli-getdomain)
-* [`rasacli getentities`](#rasacli-getentities)
-* [`rasacli getstories`](#rasacli-getstories)
-* [`rasacli getstoriesmd`](#rasacli-getstoriesmd)
-* [`rasacli gettraining`](#rasacli-gettraining)
-* [`rasacli help [COMMAND]`](#rasacli-help-command)
-* [`rasacli modelactivate`](#rasacli-modelactivate)
-* [`rasacli modeladdtag`](#rasacli-modeladdtag)
-* [`rasacli modeldelete`](#rasacli-modeldelete)
-* [`rasacli modeldeletetag`](#rasacli-modeldeletetag)
-* [`rasacli modelgettag`](#rasacli-modelgettag)
-* [`rasacli modellist`](#rasacli-modellist)
-* [`rasacli modeltrain`](#rasacli-modeltrain)
-* [`rasacli updconfig FILE`](#rasacli-updconfig-file)
-* [`rasacli upddomain FILE`](#rasacli-upddomain-file)
-* [`rasacli updstories FILE`](#rasacli-updstories-file)
-* [`rasacli updtemplates FILE`](#rasacli-updtemplates-file)
-* [`rasacli updtraining FILE`](#rasacli-updtraining-file)
-* [`rasacli vers`](#rasacli-vers)
+
+- [rasacli](#rasacli)
+  - [Table of Contents](#table-of-contents)
+- [Installation](#installation)
+- [Examples](#examples)
+- [Environment Variables](#environment-variables)
+- [Release Notes](#release-notes)
+      - [0.4.5 - Oct 7, 2019](#045---oct-7-2019)
+      - [0.4.0 - Oct 4, 2019](#040---oct-4-2019)
+      - [0.3.0 - Aug 8, 2019](#030---aug-8-2019)
+      - [0.2.0 - Aug 6, 2019](#020---aug-6-2019)
+      - [0.1.3 - Aug 4, 2019](#013---aug-4-2019)
+      - [0.1.2 - Jul 24, 2019](#012---jul-24-2019)
+      - [0.1.1 - Jul 23, 2019](#011---jul-23-2019)
+- [Developer Notes](#developer-notes)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`rasacli addstories FILE`](#rasacli-addstories-file)
+  - [`rasacli delall`](#rasacli-delall)
+  - [`rasacli deldomain`](#rasacli-deldomain)
+  - [`rasacli delstories`](#rasacli-delstories)
+  - [`rasacli deltemplates`](#rasacli-deltemplates)
+  - [`rasacli deltraining`](#rasacli-deltraining)
+  - [`rasacli getconfig`](#rasacli-getconfig)
+  - [`rasacli getdomain`](#rasacli-getdomain)
+  - [`rasacli getentities`](#rasacli-getentities)
+  - [`rasacli getstories`](#rasacli-getstories)
+  - [`rasacli getstoriesmd`](#rasacli-getstoriesmd)
+  - [`rasacli gettraining`](#rasacli-gettraining)
+  - [`rasacli help [COMMAND]`](#rasacli-help-command)
+  - [`rasacli modelactivate`](#rasacli-modelactivate)
+  - [`rasacli modeladdtag`](#rasacli-modeladdtag)
+  - [`rasacli modeldelete`](#rasacli-modeldelete)
+  - [`rasacli modeldeletetag`](#rasacli-modeldeletetag)
+  - [`rasacli modelgettag`](#rasacli-modelgettag)
+  - [`rasacli modellist`](#rasacli-modellist)
+  - [`rasacli modeltrain`](#rasacli-modeltrain)
+  - [`rasacli updconfig FILE`](#rasacli-updconfig-file)
+  - [`rasacli upddomain FILE`](#rasacli-upddomain-file)
+  - [`rasacli updstories FILE`](#rasacli-updstories-file)
+  - [`rasacli updtemplates FILE`](#rasacli-updtemplates-file)
+  - [`rasacli updtraining FILE`](#rasacli-updtraining-file)
+  - [`rasacli vers`](#rasacli-vers)
 
 ## `rasacli addstories FILE`
 
@@ -223,7 +277,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/addstories.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/addstories.ts)_
+_See code: [src/commands/addstories.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/addstories.ts)_
 
 ## `rasacli delall`
 
@@ -245,7 +299,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/delall.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/delall.ts)_
+_See code: [src/commands/delall.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/delall.ts)_
 
 ## `rasacli deldomain`
 
@@ -266,7 +320,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/deldomain.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/deldomain.ts)_
+_See code: [src/commands/deldomain.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/deldomain.ts)_
 
 ## `rasacli delstories`
 
@@ -287,7 +341,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/delstories.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/delstories.ts)_
+_See code: [src/commands/delstories.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/delstories.ts)_
 
 ## `rasacli deltemplates`
 
@@ -308,7 +362,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/deltemplates.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/deltemplates.ts)_
+_See code: [src/commands/deltemplates.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/deltemplates.ts)_
 
 ## `rasacli deltraining`
 
@@ -330,7 +384,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/deltraining.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/deltraining.ts)_
+_See code: [src/commands/deltraining.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/deltraining.ts)_
 
 ## `rasacli getconfig`
 
@@ -352,7 +406,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getconfig.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/getconfig.ts)_
+_See code: [src/commands/getconfig.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/getconfig.ts)_
 
 ## `rasacli getdomain`
 
@@ -373,7 +427,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getdomain.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/getdomain.ts)_
+_See code: [src/commands/getdomain.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/getdomain.ts)_
 
 ## `rasacli getentities`
 
@@ -395,7 +449,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getentities.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/getentities.ts)_
+_See code: [src/commands/getentities.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/getentities.ts)_
 
 ## `rasacli getstories`
 
@@ -416,7 +470,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getstories.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/getstories.ts)_
+_See code: [src/commands/getstories.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/getstories.ts)_
 
 ## `rasacli getstoriesmd`
 
@@ -437,7 +491,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/getstoriesmd.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/getstoriesmd.ts)_
+_See code: [src/commands/getstoriesmd.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/getstoriesmd.ts)_
 
 ## `rasacli gettraining`
 
@@ -459,7 +513,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/gettraining.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/gettraining.ts)_
+_See code: [src/commands/gettraining.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/gettraining.ts)_
 
 ## `rasacli help [COMMAND]`
 
@@ -499,7 +553,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/modelactivate.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/modelactivate.ts)_
+_See code: [src/commands/modelactivate.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/modelactivate.ts)_
 
 ## `rasacli modeladdtag`
 
@@ -523,7 +577,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/modeladdtag.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/modeladdtag.ts)_
+_See code: [src/commands/modeladdtag.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/modeladdtag.ts)_
 
 ## `rasacli modeldelete`
 
@@ -546,7 +600,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/modeldelete.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/modeldelete.ts)_
+_See code: [src/commands/modeldelete.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/modeldelete.ts)_
 
 ## `rasacli modeldeletetag`
 
@@ -570,7 +624,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/modeldeletetag.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/modeldeletetag.ts)_
+_See code: [src/commands/modeldeletetag.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/modeldeletetag.ts)_
 
 ## `rasacli modelgettag`
 
@@ -593,7 +647,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/modelgettag.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/modelgettag.ts)_
+_See code: [src/commands/modelgettag.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/modelgettag.ts)_
 
 ## `rasacli modellist`
 
@@ -615,7 +669,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/modellist.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/modellist.ts)_
+_See code: [src/commands/modellist.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/modellist.ts)_
 
 ## `rasacli modeltrain`
 
@@ -637,7 +691,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/modeltrain.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/modeltrain.ts)_
+_See code: [src/commands/modeltrain.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/modeltrain.ts)_
 
 ## `rasacli updconfig FILE`
 
@@ -662,7 +716,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/updconfig.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/updconfig.ts)_
+_See code: [src/commands/updconfig.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/updconfig.ts)_
 
 ## `rasacli upddomain FILE`
 
@@ -686,7 +740,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/upddomain.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/upddomain.ts)_
+_See code: [src/commands/upddomain.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/upddomain.ts)_
 
 ## `rasacli updstories FILE`
 
@@ -710,7 +764,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/updstories.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/updstories.ts)_
+_See code: [src/commands/updstories.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/updstories.ts)_
 
 ## `rasacli updtemplates FILE`
 
@@ -734,7 +788,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/updtemplates.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/updtemplates.ts)_
+_See code: [src/commands/updtemplates.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/updtemplates.ts)_
 
 ## `rasacli updtraining FILE`
 
@@ -760,7 +814,7 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/updtraining.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/updtraining.ts)_
+_See code: [src/commands/updtraining.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/updtraining.ts)_
 
 ## `rasacli vers`
 
@@ -781,5 +835,6 @@ OPTIONS
   --username=username      [default: me] username
 ```
 
-_See code: [src/commands/vers.ts](https://github.com/rgstephens/rasacli/blob/v0.4.6/src/commands/vers.ts)_
+_See code: [src/commands/vers.ts](https://github.com/rgstephens/rasacli/blob/v0.4.7/src/commands/vers.ts)_
+
 <!-- commandsstop -->

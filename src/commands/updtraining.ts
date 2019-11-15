@@ -30,10 +30,7 @@ export default class Updtraining extends Command {
     let fileContent = "";
     // merge file content since Replace API call doesn't support multiple files
     fileList.forEach(async (filename, i) => {
-      if (verbose) {
-        console.log("reading:", filename);
-        //console.log("stream:", JSON.stringify(fs.readFileSync(filename, "utf8")));
-      }
+      console.log("reading:", filename);
       fileContent += fs.readFileSync(filename, "utf8") + "\n";
     });
     // now make call with merged markdown

@@ -1,7 +1,7 @@
 {
   "name": "rasacli",
   "description": "Rasa API CLI",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "author": "Greg Stephens",
   "bin": {
     "rasacli": "./bin/run"
